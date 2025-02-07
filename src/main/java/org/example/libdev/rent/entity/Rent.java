@@ -30,7 +30,7 @@ public class Rent {
     @Column(nullable = false)
     private LocalDateTime returnDate;
 
-    @Column(columnDefinition = "TINYINT CHECK (renew <=2)")     // 연장 횟수를 2회로 제한
+    @Column(columnDefinition = "TINYINT CHECK (renew <=1)")     // 연장 횟수를 1회로 제한
     private int renew;
 
 //    @ManyToOne
