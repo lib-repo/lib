@@ -38,6 +38,14 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+
+    //2/10 https://bravesuccess.tistory.com/280
+    implementation 'org.apache.commons:commons-lang3'
+
+
+
+
 }
 
 tasks.named('test') {
