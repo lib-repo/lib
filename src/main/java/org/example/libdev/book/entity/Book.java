@@ -1,0 +1,67 @@
+package org.example.libdev.book.entity;
+
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.example.libdev.book.dto.BookResponseDTO;
+import org.example.libdev.global.entity.BaseEntity;
+
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
+public class Book extends BaseEntity {
+
+    @Id
+    @Column(name = "book_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long bookId;
+
+    @Column(name = "title", nullable = false)
+    private String title;
+
+    @Column(name = "author", nullable = false)
+    private String author;
+
+    @Column(name = "isbn", nullable = false)
+    private String isbn;
+
+    @Column(name = "publisher", nullable = false)
+    private String publisher;
+
+    @Column(name = "publication_year", nullable = false)
+    private String publicationYear;
+
+    @Column(name = "image_url", nullable = false)
+    private String imageUrl;
+
+    @Column(name = "description", nullable = false)
+    private String description;
+
+    @Column(name = "available")
+    private Boolean available;
+
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "subject_id")
+//    private Subject subject;
+//
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "library_id")
+//    private Library library;
+
+    public BookResponseDTO toResponseDTO() {
+        return BookResponseDTO.builder()
+                .bookId(bookId)
+                .title(title)
+                .author(author)
+                .isbn(isbn)
+                .publisher(publisher)
+                .publicationYear(publicationYear)
+                .imageUrl(imageUrl)
+                .description(description)
+                .build();
+    }
+}
