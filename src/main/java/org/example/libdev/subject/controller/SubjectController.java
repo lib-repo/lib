@@ -35,10 +35,20 @@ public class SubjectController {
 
     @PostMapping
     public ResponseEntity<SubjectDto> create(@RequestBody @Valid SubjectDto subjectDto){
-        SubjectDto categoryDtoResponse = subjectService.save(subjectDto.getName());
-        return new ResponseEntity<>(categoryDtoResponse, HttpStatus.OK);
+        SubjectDto subjectDtoResponse = subjectService.save(subjectDto.getName());
+        return new ResponseEntity<>(subjectDtoResponse, HttpStatus.OK);
     }
 
+    @PutMapping("update")
+    public ResponseEntity<SubjectDto> update(@RequestBody @Valid SubjectDto subjectDto){
+        SubjectDto subjectDtoResponse = subjectService.update(subjectDto.getName(), subjectDto.getId());
+        return new ResponseEntity<>(subjectDtoResponse, HttpStatus.OK);
+    }
+
+    @DeleteMapping("{subjectId}")
+    public void delete(@PathVariable Long subjectId){
+        subjectService.delete(subjectId);
+    }
 
 
 

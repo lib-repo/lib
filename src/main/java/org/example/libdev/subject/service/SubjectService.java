@@ -27,7 +27,7 @@ public class SubjectService {
 
     public SubjectDto findById(Long id) {
         Subject subject = subjectRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("Subject not found with id: " + id));
+                .orElseThrow(() -> new NoSuchElementException("해당 id에 해당하는 주제가 존재하지 않습니다. : " + id));
         return subject.toDto();
     }
 
@@ -43,15 +43,32 @@ public class SubjectService {
     }
 
     private void validate(String escapedName) {
-        if (escapedName == null || escapedName.trim().isEmpty()) {
-            throw new IllegalArgumentException("주제는 공백일 수 없습니다.");
-        }
-
         // 이미 이름이 있다면 중복예외 발생
         if(subjectRepository.existsByName(escapedName)){
             throw new IllegalArgumentException(escapedName + "은 이미 존재하는 주제입니다");
         }
     }
 
+    public SubjectDto update(String name, Long id){
 
+        // 이스케이프 처리
+        String escapedName = StringEscapeUtils.escapeHtml4(name);
+
+        validate(escapedName);
+
+        Subject subject = subjectRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 ID가 없습니다."));
+
+        subject.update(escapedName);
+        return subjectRepository.save(subject).toDto();
+    }
+
+    public void delete(Long id) {
+        Subject subject = subjectRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("해당 id에 해당하는 주제가 존재하지 않습니다. : " + id));
+
+        //삭제되면 책 분류를 미분류로 바꿈
+
+        subjectRepository.deleteById(id);
+    }
 }
