@@ -33,10 +33,10 @@ public class Rent {
     @Column(columnDefinition = "TINYINT CHECK (renew <=1)")     // 연장 횟수를 1회로 제한
     private int renew;
 
-//    @ManyToOne
-//    @JoinColumn(name = "book_id", nullable = false)
-//    private Book book;
-//
+    @ManyToOne
+    @JoinColumn(name = "book_id", nullable = false)
+    private Book book;
+
 //    @ManyToOne
 //    @JoinColumn(name = "user_id", nullable = false)
 //    private User user;
