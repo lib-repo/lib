@@ -5,7 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.example.libdev.book.entity.Book;
 import org.example.libdev.global.entity.BaseEntity;
+import org.example.libdev.rent.dto.ResponseRentDto;
 
 import java.time.LocalDateTime;
 
@@ -37,8 +39,8 @@ public class Rent {
     @JoinColumn(name = "book_id", nullable = false)
     private Book book;
 
-//    @ManyToOne
-//    @JoinColumn(name = "user_id", nullable = false)
-//    private User user;
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
 }
