@@ -16,6 +16,7 @@
 //import org.mockito.Mock;
 //import org.mockito.Mockito;
 //import org.mockito.junit.jupiter.MockitoExtension;
+//
 //import java.time.LocalDateTime;
 //import java.util.Collections;
 //import java.util.List;
@@ -36,8 +37,11 @@
 //    @Mock
 //    private UserRepository userRepository;
 //
-//    @InjectMocks
+//    @Mock
 //    private RentService rentService;
+//
+//    @InjectMocks
+//    private RentServiceTest rentServiceTest;
 //
 //    private Book book;
 //    private User user;
@@ -129,5 +133,19 @@
 //
 //        //then
 //        assertThat(result).isEmpty();
+//    }
+//
+//    @Test
+//    @DisplayName("rent 연장에 성공한다.")
+//    void updateRentRenew() throws Exception {
+//        //given
+//        Long rentId = 1L;
+//        doNothing().when(rentService).renewRent(rentId);
+//
+//        //when
+//        rentService.renewRent(rentId);
+//
+//        //then
+//        verify(rentService, times(1)).renewRent(rentId);
 //    }
 //}
