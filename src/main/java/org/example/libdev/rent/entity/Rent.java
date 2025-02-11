@@ -43,4 +43,9 @@ public class Rent {
 //    @JoinColumn(name = "user_id", nullable = false)
 //    private User user;
 
+    public void updateRenew(int renew, LocalDateTime returnDate) {
+        this.renew = renew;
+        this.returnDate = returnDate;
+    }
+
 }
