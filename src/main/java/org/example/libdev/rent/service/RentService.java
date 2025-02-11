@@ -1,17 +1,20 @@
 //package org.example.libdev.rent.service;
 //
 //import lombok.RequiredArgsConstructor;
-//import org.example.libdev.rent.entity.Book;
+//import org.example.libdev.book.entity.Book;
+//import org.example.libdev.book.repository.BookRepository;
+//import org.example.libdev.rent.dto.ResponseRentDto;
 //import org.example.libdev.rent.entity.Rent;
 //import org.example.libdev.rent.entity.RentStatus;
 //import org.example.libdev.rent.entity.User;
-//import org.example.libdev.rent.repository.BookRepository;
 //import org.example.libdev.rent.repository.RentRepository;
 //import org.example.libdev.rent.repository.UserRepository;
 //import org.springframework.stereotype.Service;
 //import org.springframework.transaction.annotation.Transactional;
 //
 //import java.time.LocalDateTime;
+//import java.util.List;
+//import java.util.stream.Collectors;
 //
 //@Service
 //@RequiredArgsConstructor
@@ -50,5 +53,20 @@
 //        rentRepository.save(rent);
 //    }
 //
+//    /**
+//     * rent 조회
+//     */
+//
+//    @Transactional(readOnly = true)
+//    public List<ResponseRentDto> selectRentByUserId(Long userId){
+//
+//        List<Rent> rentsByUser = rentRepository.findByUser_UserId(userId);
+//
+//        List<ResponseRentDto> responseList = rentsByUser.stream()
+//                .map(ResponseRentDto::toResponseRentDto)
+//                .collect(Collectors.toList());
+//
+//        return responseList;
+//    }
 //
 //}

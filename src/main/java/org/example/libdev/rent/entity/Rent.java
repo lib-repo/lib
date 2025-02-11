@@ -5,7 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.example.libdev.book.entity.Book;
 import org.example.libdev.global.entity.BaseEntity;
+import org.example.libdev.rent.dto.ResponseRentDto;
 
 import java.time.LocalDateTime;
 
