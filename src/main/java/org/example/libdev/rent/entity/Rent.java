@@ -9,6 +9,7 @@ import org.example.libdev.book.entity.Book;
 import org.example.libdev.global.entity.BaseEntity;
 import org.example.libdev.rent.dto.ResponseRentDto;
 
+import java.awt.print.Book;
 import java.time.LocalDateTime;
 
 @Entity
