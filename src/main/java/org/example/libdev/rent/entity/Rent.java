@@ -5,7 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.example.libdev.book.entity.Book;
 import org.example.libdev.global.entity.BaseEntity;
+import org.example.libdev.rent.dto.ResponseRentDto;
 
 import java.awt.print.Book;
 import java.time.LocalDateTime;
@@ -41,5 +43,10 @@ public class Rent {
 //    @ManyToOne
 //    @JoinColumn(name = "user_id", nullable = false)
 //    private User user;
+
+    public void updateRenew(int renew, LocalDateTime returnDate) {
+        this.renew = renew;
+        this.returnDate = returnDate;
+    }
 
 }

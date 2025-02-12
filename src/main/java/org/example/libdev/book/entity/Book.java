@@ -7,6 +7,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.example.libdev.book.dto.BookResponseDTO;
 import org.example.libdev.global.entity.BaseEntity;
+import org.example.libdev.library.entity.Library;
+import org.example.libdev.subject.entity.Subject;
+
+import java.util.List;
 
 @Data
 @Builder
@@ -44,13 +48,15 @@ public class Book extends BaseEntity {
     @Column(name = "available")
     private Boolean available;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "subject_id")
-//    private Subject subject;
-//
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "library_id")
-//    private Library library;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "subject_id")
+    private Subject subject;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "book_libraries",
+            joinColumns = @JoinColumn(name = "book_id"),
+            inverseJoinColumns = @JoinColumn(name = "library_id"))
+    private List<Library> libraries;
 
     public BookResponseDTO toResponseDTO() {
         return BookResponseDTO.builder()
