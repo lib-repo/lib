@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.example.libdev.global.entity.BaseEntity;
 
+import java.awt.print.Book;
 import java.time.LocalDateTime;
 
 @Entity

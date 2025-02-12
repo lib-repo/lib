@@ -8,6 +8,7 @@ import org.example.libdev.subject.service.SubjectService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,10 +22,10 @@ public class SubjectController {
 
     //사용자 :admin
     @GetMapping ("all")
-    public ResponseEntity<List<SubjectDto>> findAll(){
-        List<SubjectDto> SubjectDtos = subjectService.findAll();
-
-        return new ResponseEntity<>(SubjectDtos, HttpStatus.OK);
+    public String findAll(Model model){
+        List<SubjectDto> subjectDtos = subjectService.findAll();
+        model.addAttribute("subjects", subjectDtos);
+        return "subjectAdmin";
     }
 
     @GetMapping ("{subjectId}")
@@ -46,8 +47,15 @@ public class SubjectController {
     }
 
     @DeleteMapping("{subjectId}")
-    public void delete(@PathVariable Long subjectId){
-        subjectService.delete(subjectId);
+    public ResponseEntity<?> delete(@PathVariable Long subjectId) {
+        try {
+            subjectService.delete(subjectId);
+            return ResponseEntity.ok().build(); // 정상 응답 반환
+        } catch (Exception e) {
+            e.printStackTrace(); // 콘솔에 에러 출력
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("삭제 중 오류 발생: " + e.getMessage());
+        }
     }
 
 
