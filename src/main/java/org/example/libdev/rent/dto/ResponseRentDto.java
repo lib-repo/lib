@@ -18,8 +18,8 @@ public class ResponseRentDto {
 
 
     private RentStatus status;
-    private LocalDateTime rentDate;
-    private LocalDateTime returnDate;
+    private String rentDate;
+    private String returnDate;
     private int renew;
     private Book book;
     private Long rentId;
