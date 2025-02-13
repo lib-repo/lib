@@ -15386,5 +15386,18 @@ html.maximized-card {
   font-size: 30px;
 }
 
+.logout-button {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+}
+.logout-button a {
+  text-decoration: none;
+  background-color: #d9534f;
+  color: white;
+  padding: 10px 15px;
+  border-radius: 5px;
+}
+
 
 /*# sourceMappingURL=adminlte.css.map */
