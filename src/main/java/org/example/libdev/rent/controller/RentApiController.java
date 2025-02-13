@@ -18,15 +18,15 @@
 //    /**
 //     * rent 생성
 //     */
-////    @PostMapping("/{userId}/{bookId}")
-////    public ResponseEntity<String> createRent(@PathVariable Long userId, @PathVariable Long bookId) {
-////        try{
-////            rentService.saveRent(userId, bookId);
-////            return ResponseEntity.ok().build();
-////        }catch (IllegalStateException e){
-////            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-////        }
-////    }
+//    @PostMapping("/{userId}/{bookId}")
+//    public ResponseEntity<String> createRent(@PathVariable Long userId, @PathVariable Long bookId) {
+//        try{
+//            rentService.saveRent(userId, bookId);
+//            return ResponseEntity.ok().build();
+//        }catch (IllegalStateException e){
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+//        }
+//    }
 //
 //    /**
 //     * rent 연장
