@@ -60,3 +60,6 @@ th {
   font-size: 20px;
 }
 
+.navbar-brand {
+  cursor: pointer;
+}
