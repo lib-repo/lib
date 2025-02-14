@@ -51,7 +51,7 @@
     font-weight: bold;
     padding: 5px 10px;
     border-radius: 15px;
-    margin-bottom: 25px;
+    margin-bottom: 10px;
 }
 
 .book-status.rented {
@@ -65,7 +65,7 @@
 }
 
 .book-status.overdue {
-    background-color: yellowgreen;
+    background-color: #f44336;
     color: white;
 }
 
@@ -75,20 +75,18 @@
 }
 
 button.extend-btn {
-    background-color: yellowgreen;
-    color: black;
+    background-color: #ff9800;
+    color: white;
     border: none;
-    padding: 5px 16px;
+    padding: 10px 20px;
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s ease;
-    height: 50px;
-    margin-top: 100px;
-    font-weight: bold
+    margin-top: 10px;
 }
 
 button.extend-btn:hover {
-    background-color: green;
+    background-color: #e68900;
 }
 
 .pagination {
