@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>아이디 찾기</title>
+    <link rel="stylesheet" href="/css/user/find-id.css">
+</head>
+<body>
+<div class="container">
+    <h2>아이디 찾기</h2>
+    <hr>
+    <form id="find-id-form" action="/user/find-id" method="post">
+        <label for="name">이름</label>
+        <input type="text" id="name" name="userName" placeholder="이름을 입력하세요" required>
+
+        <label for="email">이메일</label>
+        <div class="email-group">
+            <input type="text" id="email" name="emailLocalPart" placeholder="이메일" required>
+            <span>@</span>
+            <select id="email-domain" name="emailDomain">
+                <option value="">선택해주세요</option>
+                <option value="naver.com">naver.com</option>
+                <option value="gmail.com">gmail.com</option>
+                <option value="daum.net">daum.net</option>
+                <option value="kakao.com">kakao.com</option>
+                <option value="nate.com">nate.com</option>
+            </select>
+        </div>
+
+        <button type="submit">아이디 찾기</button>
+    </form>
+
+
+    <p th:if="${message}" style="color:green;">[[${message}]]</p>
+    <p th:if="${userId}" style="font-weight: bold;">
+        회원님의 아이디: <span th:text="${userId}"></span>
+    </p>
+
+
+    <p th:if="${userId}">
+        <a th:href="@{/user/find-password(userId=${userId})}">비밀번호 찾기</a>
+    </p>
+
+    <p><a href="/user/login">로그인 페이지로 돌아가기</a></p>
+</div>
+
+
+<script src="/js/user/find-id.js"></script>
+</body>
+</html>
