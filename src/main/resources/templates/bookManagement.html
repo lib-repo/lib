@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>도서 관리</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link type="text/css" rel="stylesheet" href="/css/materialize.css"  media="screen,projection"/>
+    <link rel="stylesheet" href="/css/table.css">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h4 class="justify-start">도서 관리</h4>
+
+        <table class="highlight">
+            <thead>
+                <tr>
+                    <th>ISBN</th>
+                    <th>표지</th>
+                    <th>도서명</th>
+                    <th>저자</th>
+                    <th>출판사</th>
+                    <th>출판년도</th>
+                    <th></th>
+                </tr>
+            </thead>
+
+            <tbody id="book-list">
+                <tr th:each="book : ${books}">
+                    <td th:text="${book.isbn}"></td>
+                    <td><img th:src="${book.imageUrl}" alt="Book Image" style="width: 50px; height: auto;"></td>
+                    <td th:text="${book.title}"></td>
+                    <td th:text="${book.author}"></td>
+                    <td th:text="${book.publisher}"></td>
+                    <td th:text="${book.publicationYear}"></td>
+                    <td>
+                        <a class="btn-flat edit-btn" th:attr="data-book-id=${book.bookId}" href="javascript:void(0)"><i class="material-icons">edit</i></a>
+                        <a class="btn-flat delete-btn" th:attr="data-book-id=${book.bookId}" href="javascript:void(0)"><i class="material-icons">delete</i></a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="fixed-action-btn">
+            <button data-target="book-register-modal" class="btn-floating waves-effect waves-light btn modal-trigger">
+                <i class="material-icons">add</i>
+            </button>
+        </div>
+    </div>
+
+    <div id="book-register-modal" class="modal">
+        <div class="modal-content">
+            <h5>도서 등록</h5>
+            <div class="input-field" style="display: flex; align-items: center;">
+                <input id="isbn-input" type="text" style="flex: 1; margin-right: 10px;">
+                <label for="isbn-input">ISBN</label>
+                <button id="searchButton" class="btn waves-effect waves-light">검색</button>
+            </div>
+
+            <div>
+                <div class="input-field">
+                    <input id="title" type="text">
+                    <label for="title">도서명</label>
+                </div>
+                <div class="input-field">
+                    <input id="author" type="text">
+                    <label for="author">저자</label>
+                </div>
+                <div class="input-field">
+                    <input id="publisher" type="text">
+                    <label for="publisher">출판사</label>
+                </div>
+                <div class="input-field">
+                    <input id="publicationYear" type="text">
+                    <label for="publicationYear">출판년도</label>
+                </div>
+                <div class="input-field">
+                    <textarea id="description" class="materialize-textarea"></textarea>
+                    <label for="description">설명</label>
+                </div>
+                <div class="input-field">
+                    <input id="imageUrl" type="text">
+                    <label for="imageUrl">표지</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <button class="btn waves-effect waves-light modal-close">취소</button>
+            <button id="registerButton" class="btn waves-effect waves-light">등록</button>
+        </div>
+    </div>
+
+    <script src="/js/book.js"></script>
+    <script type="text/javascript" src="/js/materialize.js"></script>
+</body>
+</html>
