@@ -39,7 +39,7 @@ public class Book extends BaseEntity {
     @Column(name = "publication_year", nullable = false)
     private String publicationYear;
 
-    @Column(name = "image_url", nullable = false)
+    @Column(name = "image_url", nullable = true)
     private String imageUrl;
 
     @Column(name = "description", nullable = false)

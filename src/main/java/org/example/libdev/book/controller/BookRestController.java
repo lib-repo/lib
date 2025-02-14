@@ -8,14 +8,26 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
-@RequestMapping("/api/admin/books")
+@RequestMapping("/api/books")
 @RequiredArgsConstructor
-public class AdminBookController {
+public class BookRestController {
 
     private final BookService bookService;
 
-    @GetMapping("/{isbn}")
+    @GetMapping
+    public ResponseEntity<List<BookResponseDTO>> getAllBooks() {
+        return ResponseEntity.ok(bookService.getAllBooks());
+    }
+
+    @GetMapping("/{bookId}")
+    public ResponseEntity<BookResponseDTO> getBookById(@PathVariable Long bookId) {
+        return ResponseEntity.ok(bookService.getBookById(bookId));
+    }
+
+    @GetMapping("/search/{isbn}")
     public ResponseEntity<BookResponseDTO> getBookInfoByIsbn(@PathVariable String isbn) {
         return ResponseEntity.ok(bookService.getBookInfoByIsbn(isbn));
     }
