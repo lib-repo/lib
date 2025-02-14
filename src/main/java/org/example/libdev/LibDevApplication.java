@@ -11,4 +11,9 @@ public class LibDevApplication {
         SpringApplication.run(LibDevApplication.class, args);
     }
 
+    @Bean
+    public RestTemplate getRestTemplate() {
+        return new RestTemplate();
+    }
+
 }
