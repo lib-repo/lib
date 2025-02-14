@@ -21,7 +21,12 @@
                         [[${rent.status}]]
                     </span>
                 <p>도서 명 : [[${rent.book.title}]]</p>
-                <p>대여 기간 : [[${rent.rentDate.split(' ')[0]}]] ~ [[${rent.returnDate.split(' ')[0]}]]</p>
+                <p>대여 기간 : [[${rent.rentDate}]] ~ [[${rent.returnDate}]]</p>
+                <p>연장 여부 :
+                    <span th:if="${rent.renew == 0}">가능</span>
+                    <span th:if="${rent.renew == 1}">불가능</span>
+                </p>
+
             </div>
             <button th:if="${rent.status.name() == 'RENTED' and rent.renew < 1}"
                     class="extend-btn"
