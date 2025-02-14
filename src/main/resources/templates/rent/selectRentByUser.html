@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <title>rent 내역 조회 페이지</title>
     <link rel="stylesheet" type="text/css" href="/css/selectRentByUser.css">
-    <script src="/js/rent/selectRentByUser.js" defer></script>
 </head>
 <body class="rent-page-body">
 <div class="rent-page">
@@ -21,14 +20,9 @@
                         [[${rent.status}]]
                     </span>
                 <p>도서 명 : [[${rent.book.title}]]</p>
-                <p>대여 기간 : [[${rent.rentDate.split(' ')[0]}]] ~ [[${rent.returnDate.split(' ')[0]}]]</p>
+                <p>대여 기간 : [[${rent.rentDate}]] ~ [[${rent.returnDate}]]</p>
             </div>
-            <button th:if="${rent.status.name() == 'RENTED' and rent.renew < 1}"
-                    class="extend-btn"
-                    th:data-rent-id="${rent.rentId}"
-                    onclick="renewRent(this)">
-                연장 신청
-            </button>
+            <button th:if="${rent.status == 'RENTED'}" class="extend-btn">연장 신청</button>
         </div>
     </th:block>
 </div>

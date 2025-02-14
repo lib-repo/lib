@@ -13015,6 +13015,7 @@ textarea.form-control-lg {
   display: flex;
   align-items: center;
   text-decoration: none;
+  cursor: pointer;
 }
 .sidebar-brand .brand-link .brand-image {
   float: left;
@@ -15385,6 +15386,21 @@ html.maximized-card {
   font-size: 30px;
 }
 
+.admin-main {
+  position: absolute;
+  top: 20px;
+  left: 60px;
+}
+
+.admin-main a {
+  text-decoration: none;
+  background-color: black;
+  color: white;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
 .logout-button {
   position: absolute;
   top: 20px;
@@ -15392,10 +15408,14 @@ html.maximized-card {
 }
 .logout-button a {
   text-decoration: none;
-  background-color: #d9534f;
+  background-color: gray;
   color: white;
   padding: 10px 15px;
   border-radius: 5px;
+}
+
+#adminSidebar{
+  display: none;
 }
 
 
