@@ -8,8 +8,8 @@ import lombok.NoArgsConstructor;
 import org.example.libdev.book.entity.Book;
 import org.example.libdev.global.entity.BaseEntity;
 import org.example.libdev.rent.dto.ResponseRentDto;
-
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Entity
 @Table(name = "rents")
@@ -27,10 +27,10 @@ public class Rent {
     private RentStatus status;
 
     @Column(nullable = false)
-    private LocalDateTime rentDate;
+    private String rentDate;
 
     @Column(nullable = false)
-    private LocalDateTime returnDate;
+    private String returnDate;
 
     @Column(columnDefinition = "TINYINT CHECK (renew <=1)")     // 연장 횟수를 1회로 제한
     private int renew;
@@ -45,7 +45,7 @@ public class Rent {
 
     public void updateRenew(int renew, LocalDateTime returnDate) {
         this.renew = renew;
-        this.returnDate = returnDate;
+        this.returnDate = returnDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
     }
 
 }

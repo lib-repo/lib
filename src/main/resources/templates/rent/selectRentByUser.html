@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>rent 내역 조회 페이지</title>
+    <link rel="stylesheet" type="text/css" href="/css/selectRentByUser.css">
+    <script src="/js/rent/selectRentByUser.js" defer></script>
+</head>
+<body class="rent-page-body">
+<div class="rent-page">
+    <h2>Rent 현황</h2>
+</div>
+
+<div class="rent-list">
+    <th:block th:each="rent : ${rents}">
+        <div class="rent-item">
+            <div class="book-cover"></div>
+            <div class="book-info">
+                    <span class="book-status"
+                          th:classappend="${rent.status == 'RENTED' ? 'rented' : (rent.status == 'RETURNED' ? 'returned' : 'overdue')}">
+                        [[${rent.status}]]
+                    </span>
+                <p>도서 명 : [[${rent.book.title}]]</p>
+                <p>대여 기간 : [[${rent.rentDate.split(' ')[0]}]] ~ [[${rent.returnDate.split(' ')[0]}]]</p>
+            </div>
+            <button th:if="${rent.status.name() == 'RENTED' and rent.renew < 1}"
+                    class="extend-btn"
+                    th:data-rent-id="${rent.rentId}"
+                    onclick="renewRent(this)">
+                연장 신청
+            </button>
+        </div>
+    </th:block>
+</div>
+
+<ul class="pagination">
+    <li th:if="${nowPage > 0}">
+        <a th:href="@{/api/rent/{userId}(userId=${userId}, page=${nowPage - 1})}" class="page-btn">&lt;</a>
+    </li>
+
+    <li th:if="${nowPage > 2}">
+        <a th:href="@{/api/rent/{userId}(userId=${userId}, page=0)}" class="page-btn">1</a>
+    </li>
+
+    <li th:if="${nowPage > 3}">
+        <span>...</span>
+    </li>
+
+    <th:block th:each="i : ${#numbers.sequence(startPage, endPage)}">
+        <li>
+            <a th:href="@{/api/rent/{userId}(userId=${userId}, page=${i})}"
+               th:classappend="${i == nowPage} ? 'active' : ''" class="page-btn">[[${i + 1}]]</a>
+        </li>
+    </th:block>
+
+    <li th:if="${nowPage < rents.totalPages - 4}">
+        <span>...</span>
+    </li>
+
+    <li th:if="${nowPage < rents.totalPages - 3}">
+        <a th:href="@{/api/rent/{userId}(userId=${userId}, page=${rents.totalPages - 1})}" class="page-btn">
+            [[${rents.totalPages}]]
+        </a>
+    </li>
+
+    <li th:if="${nowPage < rents.totalPages - 1}">
+        <a th:href="@{/api/rent/{userId}(userId=${userId}, page=${nowPage + 1})}" class="page-btn">&gt;</a>
+    </li>
+</ul>
+
+
+</body>
+</html>

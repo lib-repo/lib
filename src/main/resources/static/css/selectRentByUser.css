@@ -1,0 +1,147 @@
+
+.rent-page-body {
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+    margin: 0;
+    padding: 20px;
+}
+
+.rent-page h2 {
+    text-align: center;
+    color: #333;
+}
+
+.rent-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    justify-content: center;
+    align-items: center;
+}
+
+.rent-item {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 600px;
+    display: flex;
+    gap: 20px;
+    text-align: left;
+    transition: transform 0.3s ease;
+}
+
+.rent-item:hover {
+    transform: scale(1.05);
+}
+
+.book-cover {
+    width: 100px;
+    height: 150px;
+    background-color: #ddd;
+    border-radius: 5px;
+}
+
+.book-info {
+    flex: 1;
+}
+
+.book-status {
+    font-weight: bold;
+    padding: 5px 10px;
+    border-radius: 15px;
+    margin-bottom: 25px;
+}
+
+.book-status.rented {
+    background-color: #4caf50;
+    color: white;
+}
+
+.book-status.returned {
+    background-color: #2196f3;
+    color: white;
+}
+
+.book-status.overdue {
+    background-color: yellowgreen;
+    color: white;
+}
+
+.book-info p {
+    margin: 5px 0;
+    color: #555;
+}
+
+button.extend-btn {
+    background-color: yellowgreen;
+    color: black;
+    border: none;
+    padding: 5px 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    height: 50px;
+    margin-top: 100px;
+    font-weight: bold
+}
+
+button.extend-btn:hover {
+    background-color: green;
+}
+
+.pagination {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    margin: 20px 0;
+    justify-content: center;
+}
+
+.pagination li {
+    margin: 0 5px;
+}
+
+.page-btn {
+    display: block;
+    padding: 8px 16px;
+    text-decoration: none;
+    color: #007bff;
+    font-size: 14px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.page-btn:hover {
+    background-color: #f1f1f1;
+}
+
+.page-btn.active {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.pagination li span {
+    padding: 8px 16px;
+    font-size: 14px;
+    color: #555;
+}
+
+.pagination li a {
+    color: #007bff;
+}
+
+.pagination li a:hover {
+    background-color: #e9ecef;
+}
+
+.pagination li a.active {
+    background-color: #007bff;
+    color: white;
+}
+
+.pagination li a:disabled {
+    color: #ccc;
+}

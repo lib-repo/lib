@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Thymeleaf Fragment Example</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/subject.css}">
+    <title>책 주제 관리</title>
+</head>
+<body>
+<!-- Nav Fragment 호출 -->
+<div th:replace="~{fragments/nav :: nav}"></div>
+
+
+
+<main>
+<div class="container">
+    <div class="title">책 주제
+        <button class="btn create" onclick="addSubject()">추가</button>
+    </div>
+    <table>
+        <thead>
+        <tr>
+            <th>이름</th>
+            <th>기능</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="subject : ${subjects}">
+            <td class="subject_detail" th:text="${subject.name}"></td>
+            <td>
+                <button class="btn edit" th:onclick="|makeEditable(this, '${subject.id}')|">수정</button>
+                <button class="btn delete" th:onclick="|deleteSubject(${subject.id})|">삭제</button>
+
+            </td>
+        </tr>
+        </tbody>
+
+    </table>
+</div>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+    // 수정 시작
+    function makeEditable(button, subjectId) {
+        var td = button.parentElement.previousElementSibling;
+        var originalValue = td.innerText; // 원래 값을 저장
+
+        if (!td.isContentEditable) {
+            td.contentEditable = 'true';
+            td.classList.add('editable');
+            td.focus();
+
+            // 커서를 맨 뒤로 보내기 위한 코드
+            document.execCommand('selectAll', false, null);
+
+            button.innerText = '저장';
+            button.onclick = function () {
+                saveEditable(td, button, subjectId, originalValue);
+            };
+            td.addEventListener('keypress', function (event) {
+                if (event.key === 'Enter') {
+                    event.preventDefault();
+                    saveEditable(td, button, subjectId, originalValue);
+                }
+            });
+        }
+    }
+
+    function saveEditable(td, button, subjectId, originalValue) {
+        td.contentEditable = 'false';
+        td.classList.remove('editable');
+        button.innerText = '수정';
+        button.onclick = function () {
+            makeEditable(button, subjectId);
+        };
+
+        // 수정된 내용을 확인하고 공백 방지
+        var updatedValue = td.innerText.trim(); // 공백 제거
+
+        if (updatedValue === "") {
+            alert('주제 값으로 공백이 올 수 없습니다.');
+            td.innerText = originalValue; // 원래 값으로 복원
+            return;
+        }
+
+
+        var data = { name: updatedValue, id: subjectId };
+
+        // 서버 엔드포인트 주소를 여기에 추가
+        axios.put('/api/subject/update', data)
+            .then(function (response) {
+                console.log('Success:', response.data);
+            })
+            .catch(function (error) {
+                console.error('Error:', error);
+            });
+    }
+    // 수정 끝
+
+    function addSubject() {
+        let subjectName = prompt("추가할 주제 이름을 입력하세요:");
+        if (subjectName) {
+            axios.post('/api/subject', {
+                name: subjectName
+            })
+                .then(function (response) {
+                    console.log(response.data);
+                    location.reload(); // 페이지 새로고침하여 추가된 항목을 표시
+                })
+                .catch(function (error) {
+                    console.error('오류 발생:', error);
+                });
+        }
+    }
+
+    function deleteSubject(subjectId) {
+        if (confirm("정말로 삭제하시겠습니까?")) {
+            axios.delete('/api/subject/' + subjectId)
+                .then(function (response) {
+                    alert("삭제 완료되었습니다.");
+                    location.reload();
+                })
+                .catch(function (error) {
+                    alert("삭제 중 오류 발생: " + error.response.data);
+                    console.error('오류 발생:', error);
+                });
+        }
+    }
+
+</script>
+</body>
+</html>
