@@ -3,6 +3,7 @@ package org.example.libdev.rent.service;
 import lombok.RequiredArgsConstructor;
 import org.example.libdev.book.entity.Book;
 import org.example.libdev.book.repository.BookRepository;
+import org.example.libdev.rent.dto.ResponseAdminRentDto;
 import org.example.libdev.rent.dto.ResponseRentDto;
 import org.example.libdev.rent.entity.Rent;
 import org.example.libdev.rent.entity.RentStatus;
@@ -100,6 +101,13 @@ public class RentService {
 
         renewRent.updateRenew(renewRent.getRenew() + 1, newReturnDate);
         rentRepository.save(renewRent);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<ResponseAdminRentDto> selectAdminRentByUserId(Pageable pageable){
+        Page<Rent> rents = rentRepository.findAll(pageable);
+
+        return rents.map(ResponseAdminRentDto::toDto);
     }
 
     @Scheduled(cron = "0 0 0 * * *")
