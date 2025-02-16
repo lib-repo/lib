@@ -27,7 +27,7 @@
     <td colspan="7" th:text="${error}" class="admin-rent-error-message"></td>
   </tr>
   <tr th:each="rent, iterStat : ${rents}">
-    <td th:text="${iterStat.count}"></td>
+    <td th:text="${(nowPage * pageSize) + iterStat.count}"></td>
     <td th:text="${rent.getBook().getTitle()}"></td>
     <td th:text="${rent.getRenew()}"></td>
     <td th:text="${rent.getUser().getUserName()}"></td>
@@ -43,22 +43,19 @@
 </table>
 
 <ul class="admin-rent-pagination">
-  <!-- 이전 버튼 -->
+
   <li th:if="${nowPage > 0}">
     <a th:href="@{/api/admin/rents/managements(page=${nowPage - 1})}" class="admin-rent-page-btn">&lt;</a>
   </li>
 
-  <!-- 첫 번째 페이지 표시 -->
   <li th:if="${startPage > 0}">
     <a th:href="@{/api/admin/rents/managements(page=0)}" class="admin-rent-page-btn">1</a>
   </li>
 
-  <!-- 중간 ... 표시 -->
   <li th:if="${startPage > 1}">
     <span>...</span>
   </li>
 
-  <!-- 현재 페이지 주변 페이지 표시 -->
   <th:block th:each="i : ${#numbers.sequence(startPage, endPage)}">
     <li>
       <a th:href="@{/api/admin/rents/managements(page=${i})}"
@@ -67,19 +64,16 @@
     </li>
   </th:block>
 
-  <!-- 중간 ... 표시 -->
   <li th:if="${endPage < rents.totalPages - 2}">
     <span>...</span>
   </li>
 
-  <!-- 마지막 페이지 표시 -->
   <li th:if="${endPage < rents.totalPages - 1}">
     <a th:href="@{/api/admin/rents/managements(page=${rents.totalPages - 1})}" class="admin-rent-page-btn">
       [[${rents.totalPages}]]
     </a>
   </li>
 
-  <!-- 다음 버튼 -->
   <li th:if="${nowPage < rents.totalPages - 1}">
     <a th:href="@{/api/admin/rents/managements(page=${nowPage + 1})}" class="admin-rent-page-btn">&gt;</a>
   </li>

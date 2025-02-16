@@ -28,6 +28,7 @@ public class AdminRentController {
             model.addAttribute("error","대여 내역이 없습니다.");
         }
         int nowPage = rents.getPageable().getPageNumber();
+        model.addAttribute("pageSize", rents.getSize());
         model.addAttribute("rents", rents);
         model.addAttribute("nowPage", nowPage);
         model.addAttribute("startPage", Math.max(nowPage - 2, 0));
