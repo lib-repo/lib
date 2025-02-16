@@ -6,9 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.example.libdev.book.entity.Book;
-import org.example.libdev.global.entity.BaseEntity;
-import org.example.libdev.rent.dto.ResponseRentDto;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 @Entity
@@ -39,13 +37,16 @@ public class Rent {
     @JoinColumn(name = "book_id", nullable = false)
     private Book book;
 
-//    @ManyToOne
-//    @JoinColumn(name = "user_id", nullable = false)
-//    private User user;
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
-    public void updateRenew(int renew, LocalDateTime returnDate) {
+    public void updateRenew(int renew, LocalDate returnDate) {
         this.renew = renew;
-        this.returnDate = returnDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        this.returnDate = returnDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
     }
 
+    public void updateRentStatus(RentStatus status) {
+        this.status = status;
+    }
 }
