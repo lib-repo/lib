@@ -23,8 +23,8 @@
                 <p>도서 명 : [[${rent.book.title}]]</p>
                 <p>대여 기간 : [[${rent.rentDate}]] ~ [[${rent.returnDate}]]</p>
                 <p>연장 여부 :
-                    <span th:if="${rent.renew == 0}">가능</span>
-                    <span th:if="${rent.renew == 1}">불가능</span>
+                    <span th:if="${#strings.equals(rent.status, 'RENTED') and rent.renew == 0}">가능</span>
+                    <span th:unless="${#strings.equals(rent.status, 'RENTED') and rent.renew == 0}">불가능</span>
                 </p>
             </div>
             <button th:if="${rent.status == 'RENTED'}" class="extend-btn">연장 신청</button>
@@ -32,13 +32,13 @@
     </th:block>
 </div>
 
-<ul class="pagination">
+<ul class="rent-page-pagination">
     <li th:if="${nowPage > 0}">
-        <a th:href="@{/api/rent/{userId}(userId=${userId}, page=${nowPage - 1})}" class="page-btn">&lt;</a>
+        <a th:href="@{/api/rent/{userId}(userId=${userId}, page=${nowPage - 1})}" class="rent-page-page-btn">&lt;</a>
     </li>
 
     <li th:if="${nowPage > 2}">
-        <a th:href="@{/api/rent/{userId}(userId=${userId}, page=0)}" class="page-btn">1</a>
+        <a th:href="@{/api/rent/{userId}(userId=${userId}, page=0)}" class="rent-page-page-btn">1</a>
     </li>
 
     <li th:if="${nowPage > 3}">
@@ -48,7 +48,7 @@
     <th:block th:each="i : ${#numbers.sequence(startPage, endPage)}">
         <li>
             <a th:href="@{/api/rent/{userId}(userId=${userId}, page=${i})}"
-               th:classappend="${i == nowPage} ? 'active' : ''" class="page-btn">[[${i + 1}]]</a>
+               th:classappend="${i == nowPage} ? 'active' : ''" class="rent-page-page-btn">[[${i + 1}]]</a>
         </li>
     </th:block>
 
@@ -57,13 +57,13 @@
     </li>
 
     <li th:if="${nowPage < rents.totalPages - 3}">
-        <a th:href="@{/api/rent/{userId}(userId=${userId}, page=${rents.totalPages - 1})}" class="page-btn">
+        <a th:href="@{/api/rent/{userId}(userId=${userId}, page=${rents.totalPages - 1})}" class="rent-page-page-btn">
             [[${rents.totalPages}]]
         </a>
     </li>
 
     <li th:if="${nowPage < rents.totalPages - 1}">
-        <a th:href="@{/api/rent/{userId}(userId=${userId}, page=${nowPage + 1})}" class="page-btn">&gt;</a>
+        <a th:href="@{/api/rent/{userId}(userId=${userId}, page=${nowPage + 1})}" class="rent-page-page-btn">&gt;</a>
     </li>
 </ul>
 

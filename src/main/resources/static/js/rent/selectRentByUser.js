@@ -5,19 +5,13 @@ document.addEventListener("DOMContentLoaded", function () {
         button.addEventListener("click", function () {
             const rentId = this.getAttribute("data-rent-id");
 
-            fetch(`/api/rent/renew/${rentId}`, {
-                method: "POST"
-            })
+            axios.post(`/api/rent/renew/${rentId}`)
                 .then(response => {
-                    if (response.ok) {
-                        alert("연장 신청이 완료되었습니다.");
-                        location.reload();
-                    } else {
-                        return response.text().then(text => { throw new Error(text); });
-                    }
+                    alert("연장 신청이 완료되었습니다.");
+                    location.reload();
                 })
                 .catch(error => {
-                    alert("연장 신청 실패: " + error.message);
+                    alert("연장 신청 실패: " + (error.response?.data || error.message));
                 });
         });
     });
