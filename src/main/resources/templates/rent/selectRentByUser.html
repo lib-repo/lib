@@ -3,7 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <title>rent 내역 조회 페이지</title>
+<<<<<<< HEAD
+    <link rel="stylesheet" type="text/css" href="/css/rent/selectRentByUser.css">
+    <script src="/js/rent/selectRentByUser.js" defer></script>
+=======
     <link rel="stylesheet" type="text/css" href="/css/selectRentByUser.css">
+>>>>>>> f5e5f31a7ac37420439e4570371e964b6108ffc4
 </head>
 <body class="rent-page-body">
 <div class="rent-page">
@@ -21,6 +26,14 @@
                     </span>
                 <p>도서 명 : [[${rent.book.title}]]</p>
                 <p>대여 기간 : [[${rent.rentDate}]] ~ [[${rent.returnDate}]]</p>
+<<<<<<< HEAD
+                <p>연장 여부 :
+                    <span th:if="${rent.renew == 0}">가능</span>
+                    <span th:if="${rent.renew == 1}">불가능</span>
+                </p>
+
+=======
+>>>>>>> f5e5f31a7ac37420439e4570371e964b6108ffc4
             </div>
             <button th:if="${rent.status == 'RENTED'}" class="extend-btn">연장 신청</button>
         </div>

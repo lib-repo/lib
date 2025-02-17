@@ -1,0 +1,168 @@
+.admin-rent-body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    padding: 20px;
+    background-color: #f4f4f4;
+}
+
+.admin-rent-h2 {
+    text-align: center;
+    color: #333;
+}
+
+.admin-rent-search {
+    display: flex;
+    justify-content: right;
+    margin-bottom: 20px;
+}
+
+.admin-rent-search-input {
+    padding: 8px 12px;
+    width: 300px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+    outline: none;
+}
+
+.admin-rent-search-input:focus {
+    border-color: #007bff;
+}
+
+.admin-rent-search-btn {
+    padding: 8px 16px;
+    background-color: black;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    margin-left: 10px;
+}
+
+.admin-rent-search-btn:hover {
+    background-color: #0056b3;
+}
+
+.admin-rent-search-btn:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+
+.admin-rent-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.admin-rent-table th,
+.admin-rent-table td {
+    padding: 12px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+}
+
+.admin-rent-table th {
+    background-color: #333;
+    color: white;
+}
+
+.admin-rent-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.admin-rent-error-message {
+    color: red;
+    font-weight: bold;
+    text-align: center;
+}
+
+.admin-rent-button-container {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.admin-rent-btn {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    color: white;
+}
+
+.admin-rent-btn-return {
+    background-color: #e74c3c;
+}
+
+.admin-rent-btn-extend {
+    background-color: #2ecc71;
+}
+
+.admin-rent-btn-notify {
+    background-color: #3498db;
+}
+
+.admin-rent-btn:hover {
+    opacity: 0.8;
+}
+
+.admin-rent-pagination {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    margin: 20px 0;
+    justify-content: center;
+}
+
+.admin-rent-pagination li {
+    margin: 0 5px;
+}
+
+.admin-rent-page-btn {
+    display: block;
+    padding: 8px 16px;
+    text-decoration: none;
+    color: #007bff;
+    font-size: 14px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.admin-rent-page-btn:hover {
+    background-color: #f1f1f1;
+}
+
+.admin-rent-page-btn.active {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.admin-rent-pagination li span {
+    padding: 8px 16px;
+    font-size: 14px;
+    color: #555;
+}
+
+.admin-rent-pagination li a {
+    color: #007bff;
+}
+
+.admin-rent-pagination li a:hover {
+    background-color: #e9ecef;
+}
+
+.admin-rent-pagination li a.active {
+    background-color: #007bff;
+    color: white;
+}
+
+.admin-rent-pagination li a:disabled {
+    color: #ccc;
+}

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>관리자 rent 내역 관리 페이지</title>
+  <link rel="stylesheet" href="/css/rent/adminRentManagement.css">
+</head>
+<body class="admin-rent-body">
+<div class="admin-rent-h2">
+  <h2>대여 관리</h2>
+</div>
+
+<div class="admin-rent-search">
+  <form action="/api/admin/rents/managements" method="get">
+    <input type="text" name="bookTitle" placeholder="책 이름으로 검색" class="admin-rent-search-input" />
+    <button type="submit" class="admin-rent-search-btn">검색</button>
+  </form>
+</div>
+
+<table class="admin-rent-table">
+  <thead>
+  <tr>
+    <th>NO</th>
+    <th>도서명</th>
+    <th>연장횟수</th>
+    <th>유저</th>
+    <th>대출일자</th>
+    <th>반납예정일</th>
+    <th>관리</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:if="${error}">
+    <td colspan="7" th:text="${error}" class="admin-rent-error-message"></td>
+  </tr>
+  <tr th:each="rent, iterStat : ${rents}">
+    <td th:text="${(nowPage * pageSize) + iterStat.count}"></td>
+    <td th:text="${rent.getBook().getTitle()}"></td>
+    <td th:text="${rent.getRenew()}"></td>
+    <td th:text="${rent.getUser().getUserName()}"></td>
+    <td th:text="${rent.rentDate}"></td>
+    <td th:text="${rent.returnDate}"></td>
+    <td class="admin-rent-button-container">
+      <button class="admin-rent-btn admin-rent-btn-return">반납</button>
+      <button class="admin-rent-btn admin-rent-btn-extend">연장</button>
+      <button class="admin-rent-btn admin-rent-btn-notify">도착통보</button>
+    </td>
+  </tr>
+  </tbody>
+</table>
+
+<ul class="admin-rent-pagination">
+
+  <li th:if="${nowPage > 0}">
+    <a th:href="@{/api/admin/rents/managements(page=${nowPage - 1}, bookTitle=${bookTitle})}" class="admin-rent-page-btn">&lt;</a>
+  </li>
+
+  <li th:if="${startPage > 0}">
+    <a th:href="@{/api/admin/rents/managements(page=0, bookTitle=${bookTitle})}" class="admin-rent-page-btn">1</a>
+  </li>
+
+  <li th:if="${startPage > 1}">
+    <span>...</span>
+  </li>
+
+  <th:block th:each="i : ${#numbers.sequence(startPage, endPage)}">
+    <li>
+      <a th:href="@{/api/admin/rents/managements(page=${i}, bookTitle=${bookTitle})}"
+         th:classappend="${i == nowPage} ? 'active' : ''"
+         class="admin-rent-page-btn">[[${i + 1}]]</a>
+    </li>
+  </th:block>
+
+  <li th:if="${endPage < rents.totalPages - 2}">
+    <span>...</span>
+  </li>
+
+  <li th:if="${endPage < rents.totalPages - 1}">
+    <a th:href="@{/api/admin/rents/managements(page=${rents.totalPages - 1}, bookTitle=${bookTitle})}" class="admin-rent-page-btn">
+      [[${rents.totalPages}]]
+    </a>
+  </li>
+
+  <li th:if="${nowPage < rents.totalPages - 1}">
+    <a th:href="@{/api/admin/rents/managements(page=${nowPage + 1}, bookTitle=${bookTitle})}" class="admin-rent-page-btn">&gt;</a>
+  </li>
+</ul>
+
+
+</body>
+</html>
