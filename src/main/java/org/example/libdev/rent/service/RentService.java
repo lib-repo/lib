@@ -1,10 +1,14 @@
 package org.example.libdev.rent.service;
 
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.example.libdev.book.entity.Book;
 import org.example.libdev.book.repository.BookRepository;
 import org.example.libdev.rent.dto.ResponseAdminRentDto;
 import org.example.libdev.rent.dto.ResponseRentDto;
+import org.example.libdev.rent.entity.EmailMessage;
 import org.example.libdev.rent.entity.Rent;
 import org.example.libdev.rent.entity.RentStatus;
 import org.example.libdev.rent.repository.RentRepository;
@@ -12,6 +16,8 @@ import org.example.libdev.user.entity.User;
 import org.example.libdev.user.repository.UserRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,10 +29,12 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class RentService {
     private final RentRepository rentRepository;
     private final BookRepository bookRepository;
     private final UserRepository userRepository;
+    private final JavaMailSender javaMailSender;
 
     /**
      * rent 생성
@@ -146,10 +154,84 @@ public class RentService {
             LocalDate returnDate = LocalDate.parse(rent.getReturnDate(), formatter);
             if(returnDate.isBefore(today)){
                 rent.updateRentStatus(RentStatus.OVERDUE);
+                sendOverdueMail(rent.getRentId());
             }
         }
 
         rentRepository.saveAll(overdueRents);
 
     }
+
+    @Transactional
+    public void sendOverdueMail(Long rentId) {
+        Rent rent = rentRepository.findById(rentId).orElseThrow(
+                () -> new IllegalArgumentException("Rent 내역을 찾을 수 없습니다.")
+        );
+
+        rent.updateRentStatus(RentStatus.OVERDUE);
+        rentRepository.save(rent);
+
+        User user = rent.getUser();
+        Book book = rent.getBook();
+        String subject = "책 연체 알림: " + book.getTitle();
+        String message = "안녕하세요, " + user.getUserName() + "님.\n\n"
+                + "대출하신 책 \"" + book.getTitle() + "\"의 반납 기한이 지났습니다.\n"
+                + "연체된 책은 반환되기 전까지 연체료가 부과될 수 있습니다.\n\n"
+                + "반납을 서두르시길 바랍니다.";
+
+        EmailMessage emailMessage = EmailMessage.builder()
+                .to(user.getEmail())
+                .subject(subject)
+                .message(message)
+                .build();
+
+        sendMail(emailMessage, "overdue");
+    }
+
+    /**
+     * 도착 알림 메일 보내기
+     */
+    @Transactional
+    public void sendArrivalNotification(Long rentId) {
+        Rent rent = rentRepository.findById(rentId).orElseThrow(
+                () -> new IllegalArgumentException("Rent 내역을 찾을 수 없습니다.")
+        );
+
+        User user = rent.getUser();
+        Book book = rent.getBook();
+        String subject = "도착 알림: " + book.getTitle();
+        String message = "안녕하세요, " + user.getUserName() + "님.\n\n"
+                + "대출하신 책 \"" + book.getTitle() + "\"이 도착했습니다.\n"
+                + "반납 기한 내에 반납해주세요.\n\n"
+                + "감사합니다.";
+
+        EmailMessage emailMessage = EmailMessage.builder()
+                .to(user.getEmail())
+                .subject(subject)
+                .message(message)
+                .build();
+
+        log.info("이메일:{}" ,user.getEmail());
+        sendMail(emailMessage, "arrival");
+        log.info("성공 여부:{}", sendMail(emailMessage, "arrival"));
+    }
+
+
+    public String sendMail(EmailMessage emailMessage, String type) {
+        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+
+        try {
+            MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, false, "UTF-8");
+            mimeMessageHelper.setTo(emailMessage.getTo());
+            mimeMessageHelper.setSubject(emailMessage.getSubject());
+            mimeMessageHelper.setText(emailMessage.getMessage(), true);
+            javaMailSender.send(mimeMessage);
+
+            return "메일 전송 성공";
+
+        } catch (MessagingException e) {
+            throw new RuntimeException("메일 전송 실패", e);
+        }
+    }
+
 }

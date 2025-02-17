@@ -53,4 +53,17 @@ public class RentApiController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
+
+    /**
+     *  도착 통보 시 이메일 전송
+     */
+    @PostMapping("/{rentId}/arrival")
+    public ResponseEntity<String> arrivalEmail(@PathVariable Long rentId){
+        try{
+            rentService.sendArrivalNotification(rentId);
+            return ResponseEntity.ok().build();
+        }catch (IllegalArgumentException e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
 }
