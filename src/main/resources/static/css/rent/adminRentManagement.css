@@ -10,6 +10,46 @@
     color: #333;
 }
 
+.admin-rent-search {
+    display: flex;
+    justify-content: right;
+    margin-bottom: 20px;
+}
+
+.admin-rent-search-input {
+    padding: 8px 12px;
+    width: 300px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+    outline: none;
+}
+
+.admin-rent-search-input:focus {
+    border-color: #007bff;
+}
+
+.admin-rent-search-btn {
+    padding: 8px 16px;
+    background-color: black;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    margin-left: 10px;
+}
+
+.admin-rent-search-btn:hover {
+    background-color: #0056b3;
+}
+
+.admin-rent-search-btn:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+
 .admin-rent-table {
     width: 100%;
     border-collapse: collapse;

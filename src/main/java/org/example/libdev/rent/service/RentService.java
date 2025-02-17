@@ -104,8 +104,8 @@ public class RentService {
     }
 
     @Transactional(readOnly = true)
-    public Page<ResponseAdminRentDto> selectAdminRentByUserId(Pageable pageable){
-        Page<Rent> rents = rentRepository.findAll(pageable);
+    public Page<ResponseAdminRentDto> selectAdminRentByUserId(String bookTitle,Pageable pageable){
+        Page<Rent> rents = rentRepository.findByBookTitleContaining(bookTitle,pageable);
 
         return rents.map(ResponseAdminRentDto::toDto);
     }

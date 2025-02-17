@@ -10,6 +10,14 @@
 <div class="admin-rent-h2">
   <h2>대여 관리</h2>
 </div>
+
+<div class="admin-rent-search">
+  <form action="/api/admin/rents/managements" method="get">
+    <input type="text" name="bookTitle" placeholder="책 이름으로 검색" class="admin-rent-search-input" />
+    <button type="submit" class="admin-rent-search-btn">검색</button>
+  </form>
+</div>
+
 <table class="admin-rent-table">
   <thead>
   <tr>
@@ -45,11 +53,11 @@
 <ul class="admin-rent-pagination">
 
   <li th:if="${nowPage > 0}">
-    <a th:href="@{/api/admin/rents/managements(page=${nowPage - 1})}" class="admin-rent-page-btn">&lt;</a>
+    <a th:href="@{/api/admin/rents/managements(page=${nowPage - 1}, bookTitle=${bookTitle})}" class="admin-rent-page-btn">&lt;</a>
   </li>
 
   <li th:if="${startPage > 0}">
-    <a th:href="@{/api/admin/rents/managements(page=0)}" class="admin-rent-page-btn">1</a>
+    <a th:href="@{/api/admin/rents/managements(page=0, bookTitle=${bookTitle})}" class="admin-rent-page-btn">1</a>
   </li>
 
   <li th:if="${startPage > 1}">
@@ -58,7 +66,7 @@
 
   <th:block th:each="i : ${#numbers.sequence(startPage, endPage)}">
     <li>
-      <a th:href="@{/api/admin/rents/managements(page=${i})}"
+      <a th:href="@{/api/admin/rents/managements(page=${i}, bookTitle=${bookTitle})}"
          th:classappend="${i == nowPage} ? 'active' : ''"
          class="admin-rent-page-btn">[[${i + 1}]]</a>
     </li>
@@ -69,13 +77,13 @@
   </li>
 
   <li th:if="${endPage < rents.totalPages - 1}">
-    <a th:href="@{/api/admin/rents/managements(page=${rents.totalPages - 1})}" class="admin-rent-page-btn">
+    <a th:href="@{/api/admin/rents/managements(page=${rents.totalPages - 1}, bookTitle=${bookTitle})}" class="admin-rent-page-btn">
       [[${rents.totalPages}]]
     </a>
   </li>
 
   <li th:if="${nowPage < rents.totalPages - 1}">
-    <a th:href="@{/api/admin/rents/managements(page=${nowPage + 1})}" class="admin-rent-page-btn">&gt;</a>
+    <a th:href="@{/api/admin/rents/managements(page=${nowPage + 1}, bookTitle=${bookTitle})}" class="admin-rent-page-btn">&gt;</a>
   </li>
 </ul>
 
