@@ -7,9 +7,9 @@ import org.example.libdev.rent.dto.ResponseAdminRentDto;
 import org.example.libdev.rent.dto.ResponseRentDto;
 import org.example.libdev.rent.entity.Rent;
 import org.example.libdev.rent.entity.RentStatus;
-import org.example.libdev.rent.entity.User;
 import org.example.libdev.rent.repository.RentRepository;
-import org.example.libdev.rent.repository.UserRepository;
+import org.example.libdev.user.entity.User;
+import org.example.libdev.user.repository.UserRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -103,12 +103,6 @@ public class RentService {
         rentRepository.save(renewRent);
     }
 
-    @Transactional(readOnly = true)
-    public Page<ResponseAdminRentDto> selectAdminRentByUserId(String bookTitle,Pageable pageable){
-        Page<Rent> rents = rentRepository.findByBookTitleContaining(bookTitle,pageable);
-
-        return rents.map(ResponseAdminRentDto::toDto);
-    }
 
     @Scheduled(cron = "0 0 0 * * *")
     @Transactional

@@ -7,7 +7,8 @@ import lombok.NoArgsConstructor;
 import org.example.libdev.book.entity.Book;
 import org.example.libdev.rent.entity.Rent;
 import org.example.libdev.rent.entity.RentStatus;
-import org.example.libdev.rent.entity.User;
+import org.example.libdev.user.entity.User;
+
 
 @Builder
 @Data

@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.example.libdev.book.entity.Book;
+import org.example.libdev.user.entity.User;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
