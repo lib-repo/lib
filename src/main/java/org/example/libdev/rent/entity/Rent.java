@@ -40,7 +40,7 @@ public class Rent {
     private Book book;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_idx", nullable = false)
     private User user;
 
     public void updateRenew(int renew, LocalDate returnDate) {
@@ -49,6 +49,11 @@ public class Rent {
     }
 
     public void updateRentStatus(RentStatus status) {
+        this.status = status;
+    }
+
+    public void updateReturnStatusAndDate(RentStatus status, String returnDate) {
+        this.returnDate = returnDate;
         this.status = status;
     }
 }

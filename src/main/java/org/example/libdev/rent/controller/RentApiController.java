@@ -40,4 +40,17 @@ public class RentApiController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
+
+    /**
+     * admin rent 반납
+     */
+    @PostMapping("/admin/return/{rentId}")
+    public ResponseEntity<String> returnBook(@PathVariable Long rentId) {
+        try{
+            rentService.returnRent(rentId);
+            return ResponseEntity.ok().build();
+        }catch (IllegalStateException e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
 }

@@ -71,7 +71,7 @@ public class RentService {
     @Transactional(readOnly = true)
     public Page<ResponseRentDto> selectRentByUserId(Long userId, Pageable pageable){
 
-        Page<Rent> rentsByUser = rentRepository.findByUser_UserId(userId,pageable);
+        Page<Rent> rentsByUser = rentRepository.findByUser_UserIdx(userId,pageable);
 
         return rentsByUser.map(ResponseRentDto::toResponseRentDto);
     }
@@ -103,6 +103,36 @@ public class RentService {
         rentRepository.save(renewRent);
     }
 
+    /**
+     *  rent 내역 조회
+     */
+    @Transactional(readOnly = true)
+    public Page<ResponseAdminRentDto> selectAdminRentByUserId(String bookTitle, Pageable pageable){
+        Page<Rent> rents = rentRepository.findByBookTitleContaining(bookTitle,pageable);
+
+        return rents.map(ResponseAdminRentDto::toDto);
+    }
+
+    /**
+     *  rent 반납 기능
+     */
+
+    @Transactional
+    public void returnRent(Long rentId){
+
+        Rent returnRent = rentRepository.findById(rentId).orElseThrow(
+                () -> new IllegalArgumentException("Rent 내역을 찾을 수 없습니다.")
+        );
+
+        Book availableBook = returnRent.getBook();
+
+        availableBook.updateAvailable(true);
+        LocalDate returnDate = LocalDate.now();
+        returnRent.updateReturnStatusAndDate(RentStatus.RETURNED, returnDate.toString());
+
+        bookRepository.save(availableBook);
+        rentRepository.save(returnRent);
+    }
 
     @Scheduled(cron = "0 0 0 * * *")
     @Transactional
