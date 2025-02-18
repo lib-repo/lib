@@ -75,13 +75,12 @@ public class RentService {
     /**
      * rent 조회
      */
-
     @Transactional(readOnly = true)
-    public Page<ResponseRentDto> selectRentByUserId(Long userId, Pageable pageable){
-
-        Page<Rent> rentsByUser = rentRepository.findByUser_UserIdx(userId,pageable);
-
-        return rentsByUser.map(ResponseRentDto::toResponseRentDto);
+    public List<ResponseRentDto> selectRentByUserId(Long userId) {
+        List<Rent> rentsByUser = rentRepository.findByUser_UserIdxAndStatus(userId, RentStatus.RENTED);
+        return rentsByUser.stream()
+                .map(ResponseRentDto::toResponseRentDto)
+                .toList();
     }
 
     /**
@@ -112,7 +111,7 @@ public class RentService {
     }
 
     /**
-     *  rent 내역 조회
+     *  관리자 rent 내역 조회
      */
     @Transactional(readOnly = true)
     public Page<ResponseAdminRentDto> selectAdminRentByUserId(String bookTitle, Pageable pageable){

@@ -13,7 +13,7 @@ import java.util.List;
 @Repository
 public interface RentRepository extends JpaRepository<Rent, Long> {
 
-    Page<Rent> findByUser_UserIdx(Long userId, Pageable pageable);
+    List<Rent> findByUser_UserIdxAndStatus(Long userIdx, RentStatus status);
     List<Rent> findByStatus(RentStatus status);
     Page<Rent> findByBookTitleContaining(String bookTitle, Pageable pageable);
 }

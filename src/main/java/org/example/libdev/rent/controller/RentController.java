@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.List;
+
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/api/rent")
@@ -23,22 +25,16 @@ public class RentController {
     private final RentService rentService;
 
     @GetMapping("/{userId}")
-    public String selectRentByUser(@PathVariable Long userId, Model model,
-                                   @PageableDefault(page = 0, size = 10, sort = "rentDate", direction = Sort.Direction.DESC)
-                                   Pageable pageable) {
+    public String selectRentByUser(@PathVariable Long userId, Model model) {
 
-        Page<ResponseRentDto> rents = rentService.selectRentByUserId(userId, pageable);
+        List<ResponseRentDto> rents = rentService.selectRentByUserId(userId);
 
         if (rents.isEmpty()) {
             model.addAttribute("message", "대여 내역이 없습니다.");
         }
 
-        int nowPage = rents.getPageable().getPageNumber();
         model.addAttribute("rents", rents);
         model.addAttribute("userId", userId);
-        model.addAttribute("nowPage", nowPage);
-        model.addAttribute("startPage", Math.max(nowPage - 2, 0));
-        model.addAttribute("endPage", Math.min(nowPage + 2, rents.getTotalPages() - 1));
 
         return "rent/selectRentByUser";
     }
