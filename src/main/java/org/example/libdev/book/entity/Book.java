@@ -70,4 +70,9 @@ public class Book extends BaseEntity {
                 .description(description)
                 .build();
     }
+
+    // 책 반납 시 다시 대출 가능 상태로 변경
+    public void updateAvailable(Boolean available) {
+        this.available = available;
+    }
 }

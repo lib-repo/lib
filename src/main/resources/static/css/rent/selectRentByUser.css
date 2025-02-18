@@ -7,7 +7,7 @@
 }
 
 .rent-page h2 {
-    text-align: center;
+    text-align: left;
     color: #333;
 }
 
@@ -18,6 +18,48 @@
     justify-content: center;
     align-items: center;
 }
+
+.rent-page-filter-bar {
+
+    padding: 10px 20px;
+    margin-bottom: -20px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-left: 520px;
+}
+
+.rent-page-filter-bar label {
+    font-size: 16px;
+    color: #333;
+    font-weight: bold;
+}
+
+.rent-page-filter-bar select {
+    padding: 8px 15px;
+    font-size: 16px;
+    color: #555;
+    background-color: #f4f4f4;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.rent-page-filter-bar select:focus {
+    border-color: #4caf50;
+    background-color: #e8f5e9;
+}
+
+.rent-page-filter-bar select option {
+    font-size: 16px;
+}
+
+.rent-page-filter-bar form {
+    display: inline-block;
+}
+
 
 .rent-item {
     background-color: #fff;
@@ -89,7 +131,7 @@ button.extend-btn:hover {
     background-color: #e68900;
 }
 
-.pagination {
+.rent-page-pagination {
     display: flex;
     list-style: none;
     padding: 0;
@@ -97,11 +139,11 @@ button.extend-btn:hover {
     justify-content: center;
 }
 
-.pagination li {
+.rent-page-pagination li {
     margin: 0 5px;
 }
 
-.page-btn {
+.rent-page-page-btn {
     display: block;
     padding: 8px 16px;
     text-decoration: none;
@@ -112,34 +154,34 @@ button.extend-btn:hover {
     border-radius: 4px;
 }
 
-.page-btn:hover {
+.rent-page-page-btn:hover {
     background-color: #f1f1f1;
 }
 
-.page-btn.active {
+.rent-page-page-btn.active {
     background-color: #007bff;
     color: #fff;
 }
 
-.pagination li span {
+.rent-page-pagination li span {
     padding: 8px 16px;
     font-size: 14px;
     color: #555;
 }
 
-.pagination li a {
+.rent-page-pagination li a {
     color: #007bff;
 }
 
-.pagination li a:hover {
+.rent-page-pagination li a:hover {
     background-color: #e9ecef;
 }
 
-.pagination li a.active {
+.rent-page-pagination li a.active {
     background-color: #007bff;
     color: white;
 }
 
-.pagination li a:disabled {
+.rent-page-pagination li a:disabled {
     color: #ccc;
 }

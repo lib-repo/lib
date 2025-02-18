@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.example.libdev.book.entity.Book;
+import org.example.libdev.user.entity.User;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
@@ -38,7 +40,7 @@ public class Rent {
     private Book book;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_idx", nullable = false)
     private User user;
 
     public void updateRenew(int renew, LocalDate returnDate) {
@@ -47,6 +49,11 @@ public class Rent {
     }
 
     public void updateRentStatus(RentStatus status) {
+        this.status = status;
+    }
+
+    public void updateReturnStatusAndDate(RentStatus status, String returnDate) {
+        this.returnDate = returnDate;
         this.status = status;
     }
 }

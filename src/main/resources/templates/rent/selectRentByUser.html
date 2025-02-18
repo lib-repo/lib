@@ -2,79 +2,55 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>rent 내역 조회 페이지</title>
-<<<<<<< HEAD
+    <title>대여 현황 조회 페이지</title>
     <link rel="stylesheet" type="text/css" href="/css/rent/selectRentByUser.css">
     <script src="/js/rent/selectRentByUser.js" defer></script>
-=======
-    <link rel="stylesheet" type="text/css" href="/css/selectRentByUser.css">
->>>>>>> f5e5f31a7ac37420439e4570371e964b6108ffc4
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </head>
+
 <body class="rent-page-body">
 <div class="rent-page">
-    <h2>Rent 현황</h2>
+    <h2>대여 현황</h2>
 </div>
 
 <div class="rent-list">
+
+    <div class="rent-page-filter-bar" th:data-user-id="${userId}">
+        <label for="rent-status"></label>
+        <form method="get" th:action="@{/api/rent/{userId}(userId=${userId})}">
+            <select id="rent-status" name="status" onchange="this.form.submit()">
+                <option>선택</option>
+                <option value="ALL" th:selected="${status == 'ALL'}">전체</option>
+                <option value="RENTED" th:selected="${status == 'RENTED'}">대여중</option>
+                <option value="OVERDUE" th:selected="${status == 'OVERDUE'}">연체중</option>
+            </select>
+        </form>
+    </div>
+
     <th:block th:each="rent : ${rents}">
         <div class="rent-item">
             <div class="book-cover"></div>
             <div class="book-info">
-                    <span class="book-status"
-                          th:classappend="${rent.status == 'RENTED' ? 'rented' : (rent.status == 'RETURNED' ? 'returned' : 'overdue')}">
-                        [[${rent.status}]]
-                    </span>
-                <p>도서 명 : [[${rent.book.title}]]</p>
+<!--                    <span class="book-status"-->
+<!--                          th:classappend="${rent.status == 'RENTED' ? 'rented' : (rent.status == 'RETURNED' ? 'returned' : 'overdue')}">-->
+<!--                        [[${rent.status}]]-->
+<!--                    </span>-->
+                <p>도서명 : [[${rent.book.title}]]</p>
                 <p>대여 기간 : [[${rent.rentDate}]] ~ [[${rent.returnDate}]]</p>
-<<<<<<< HEAD
-                <p>연장 여부 :
-                    <span th:if="${rent.renew == 0}">가능</span>
-                    <span th:if="${rent.renew == 1}">불가능</span>
+                <p>대여 상태 :
+                    <span th:if="${#strings.equals(rent.status, 'RENTED')}">대출중</span>
+                    <span th:if="${#strings.equals(rent.status, 'OVERDUE')}">연체중</span>
                 </p>
-
-=======
->>>>>>> f5e5f31a7ac37420439e4570371e964b6108ffc4
+                <p>연장 여부 :
+                    <span th:if="${#strings.equals(rent.status, 'RENTED') and rent.renew == 0}">가능</span>
+                    <span th:unless="${#strings.equals(rent.status, 'RENTED') and rent.renew == 0}">불가능</span>
+                </p>
             </div>
-            <button th:if="${rent.status == 'RENTED'}" class="extend-btn">연장 신청</button>
+            <button th:if="${#strings.equals(rent.status, 'RENTED') and rent.renew == 0}"
+                    class="extend-btn" th:data-rent-id="${rent.rentId}">연장 신청</button>
         </div>
     </th:block>
 </div>
-
-<ul class="pagination">
-    <li th:if="${nowPage > 0}">
-        <a th:href="@{/api/rent/{userId}(userId=${userId}, page=${nowPage - 1})}" class="page-btn">&lt;</a>
-    </li>
-
-    <li th:if="${nowPage > 2}">
-        <a th:href="@{/api/rent/{userId}(userId=${userId}, page=0)}" class="page-btn">1</a>
-    </li>
-
-    <li th:if="${nowPage > 3}">
-        <span>...</span>
-    </li>
-
-    <th:block th:each="i : ${#numbers.sequence(startPage, endPage)}">
-        <li>
-            <a th:href="@{/api/rent/{userId}(userId=${userId}, page=${i})}"
-               th:classappend="${i == nowPage} ? 'active' : ''" class="page-btn">[[${i + 1}]]</a>
-        </li>
-    </th:block>
-
-    <li th:if="${nowPage < rents.totalPages - 4}">
-        <span>...</span>
-    </li>
-
-    <li th:if="${nowPage < rents.totalPages - 3}">
-        <a th:href="@{/api/rent/{userId}(userId=${userId}, page=${rents.totalPages - 1})}" class="page-btn">
-            [[${rents.totalPages}]]
-        </a>
-    </li>
-
-    <li th:if="${nowPage < rents.totalPages - 1}">
-        <a th:href="@{/api/rent/{userId}(userId=${userId}, page=${nowPage + 1})}" class="page-btn">&gt;</a>
-    </li>
-</ul>
-
 
 </body>
 </html>
