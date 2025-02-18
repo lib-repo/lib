@@ -16,4 +16,5 @@ public interface RentRepository extends JpaRepository<Rent, Long> {
     List<Rent> findByUser_UserIdxAndStatus(Long userIdx, RentStatus status);
     List<Rent> findByStatus(RentStatus status);
     Page<Rent> findByBookTitleContaining(String bookTitle, Pageable pageable);
+    List<Rent> findByUser_UserIdxAndStatusNot(Long userId, RentStatus status);
 }

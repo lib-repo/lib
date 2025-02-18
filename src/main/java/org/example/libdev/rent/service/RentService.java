@@ -76,8 +76,16 @@ public class RentService {
      * rent 조회
      */
     @Transactional(readOnly = true)
-    public List<ResponseRentDto> selectRentByUserId(Long userId) {
-        List<Rent> rentsByUser = rentRepository.findByUser_UserIdxAndStatus(userId, RentStatus.RENTED);
+    public List<ResponseRentDto> selectRentByUserId(Long userId, String status) {
+        List<Rent> rentsByUser = List.of();
+
+        if(status.isEmpty() || status.equalsIgnoreCase("ALL")){
+            rentsByUser = rentRepository.findByUser_UserIdxAndStatusNot(userId, RentStatus.RETURNED);
+        }else{
+            RentStatus rentStatus = RentStatus.valueOf(status.toUpperCase());
+            rentsByUser = rentRepository.findByUser_UserIdxAndStatus(userId, rentStatus);
+        }
+
         return rentsByUser.stream()
                 .map(ResponseRentDto::toResponseRentDto)
                 .toList();
@@ -210,9 +218,7 @@ public class RentService {
                 .message(message)
                 .build();
 
-        log.info("이메일:{}" ,user.getEmail());
         sendMail(emailMessage, "arrival");
-        log.info("성공 여부:{}", sendMail(emailMessage, "arrival"));
     }
 
 

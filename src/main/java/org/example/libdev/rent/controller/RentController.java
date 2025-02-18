@@ -3,6 +3,7 @@ package org.example.libdev.rent.controller;
 import lombok.RequiredArgsConstructor;
 import org.example.libdev.rent.dto.ResponseAdminRentDto;
 import org.example.libdev.rent.dto.ResponseRentDto;
+import org.example.libdev.rent.entity.RentStatus;
 import org.example.libdev.rent.service.RentService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -25,10 +26,12 @@ public class RentController {
     private final RentService rentService;
 
     @GetMapping("/{userId}")
-    public String selectRentByUser(@PathVariable Long userId, Model model) {
+    public String selectRentByUser(@PathVariable Long userId, @RequestParam(required = false) String status, Model model) {
 
-        List<ResponseRentDto> rents = rentService.selectRentByUserId(userId);
 
+        List<ResponseRentDto> rents = rentService.selectRentByUserId(userId, status);
+
+        System.out.println(rents.toString());
         if (rents.isEmpty()) {
             model.addAttribute("message", "대여 내역이 없습니다.");
         }
@@ -38,7 +41,6 @@ public class RentController {
 
         return "rent/selectRentByUser";
     }
-
 
     @GetMapping("/admin/managements")
     public String rentManagement(Model model,
