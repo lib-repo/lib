@@ -1,9 +1,6 @@
 package org.example.libdev.rent.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.example.libdev.book.entity.Book;
 import org.example.libdev.rent.entity.Rent;
 import org.example.libdev.rent.entity.RentStatus;
@@ -12,6 +9,7 @@ import org.example.libdev.user.entity.User;
 
 @Builder
 @Data
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class ResponseAdminRentDto {

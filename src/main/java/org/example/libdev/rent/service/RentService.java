@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.example.libdev.book.entity.Book;
 import org.example.libdev.book.repository.BookRepository;
 import org.example.libdev.rent.dto.ResponseAdminRentDto;
+import org.example.libdev.rent.dto.ResponseHistoryRentDto;
 import org.example.libdev.rent.dto.ResponseRentDto;
 import org.example.libdev.rent.entity.EmailMessage;
 import org.example.libdev.rent.entity.Rent;
@@ -25,7 +26,10 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -73,26 +77,48 @@ public class RentService {
     }
 
     /**
-     * rent 조회
+     * 대여 현황 조회
      */
     @Transactional(readOnly = true)
     public List<ResponseRentDto> selectRentByUserId(Long userId, String status) {
-        List<Rent> rentsByUser = List.of();
+        List<Rent> rentsByUser;
 
-        if(status.isEmpty() || status.equalsIgnoreCase("ALL")){
-            rentsByUser = rentRepository.findByUser_UserIdxAndStatusNot(userId, RentStatus.RETURNED);
-        }else{
+        if (status.isEmpty() || status.equalsIgnoreCase("ALL")) {
+            rentsByUser = rentRepository.findByUser_UserIdxAndStatusNot(userId, RentStatus.RETURNED)
+                    .orElseThrow(()-> new IllegalStateException("사용자의 대여 내역을 찾을 수 없습니다."));
+        } else {
             RentStatus rentStatus = RentStatus.valueOf(status.toUpperCase());
-            rentsByUser = rentRepository.findByUser_UserIdxAndStatus(userId, rentStatus);
+            rentsByUser = rentRepository.findByUser_UserIdxAndStatus(userId, rentStatus).orElseThrow(
+                    () -> new IllegalStateException("사용자의 대여 내역을 찾을 수 없습니다.")
+            );
         }
 
         return rentsByUser.stream()
+                .sorted(Comparator.comparing(Rent::getRentDate).reversed())
                 .map(ResponseRentDto::toResponseRentDto)
                 .toList();
     }
 
+
     /**
-     * rent 연장
+     *  대여 내역 조회
+     */
+    @Transactional(readOnly = true)
+    public List<ResponseHistoryRentDto> historyRentByUser(Long userId){
+
+        List<Rent> historyRents = rentRepository.findByUser_UserIdxAndStatus(userId,RentStatus.RETURNED).orElseThrow(
+                () -> new IllegalStateException("대여 내역을 찾을 수 없습니다.")
+        );
+
+        return historyRents.stream()
+                .sorted(Comparator.comparing(Rent::getRentDate).reversed())
+                .map(ResponseHistoryRentDto::toDto)
+                .toList();
+    }
+
+
+    /**
+     * 대여 연장
      */
     @Transactional
     public void renewRent(Long rentId){
@@ -119,7 +145,7 @@ public class RentService {
     }
 
     /**
-     *  관리자 rent 내역 조회
+     *  대여 내역 조회(관리자)
      */
     @Transactional(readOnly = true)
     public Page<ResponseAdminRentDto> selectAdminRentByUserId(String bookTitle, Pageable pageable){
@@ -149,13 +175,18 @@ public class RentService {
         rentRepository.save(returnRent);
     }
 
+    /**
+     *  연체 확인 스케줄러
+     */
     @Scheduled(cron = "0 0 0 * * *")
     @Transactional
     public void updateOverdueStatus(){
         LocalDate today = LocalDate.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-        List<Rent> overdueRents = rentRepository.findByStatus(RentStatus.RENTED);
+        List<Rent> overdueRents = rentRepository.findByStatus(RentStatus.RENTED).orElseThrow(
+                () -> new IllegalStateException("연체된 내역이 없습니다.")
+        );
 
         for(Rent rent : overdueRents){
             LocalDate returnDate = LocalDate.parse(rent.getReturnDate(), formatter);
@@ -169,6 +200,9 @@ public class RentService {
 
     }
 
+    /**
+     *  연체 메일 전송
+     */
     @Transactional
     public void sendOverdueMail(Long rentId) {
         Rent rent = rentRepository.findById(rentId).orElseThrow(
@@ -220,7 +254,6 @@ public class RentService {
 
         sendMail(emailMessage, "arrival");
     }
-
 
     public String sendMail(EmailMessage emailMessage, String type) {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();

@@ -2,6 +2,7 @@ package org.example.libdev.rent.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.example.libdev.rent.dto.ResponseAdminRentDto;
+import org.example.libdev.rent.dto.ResponseHistoryRentDto;
 import org.example.libdev.rent.dto.ResponseRentDto;
 import org.example.libdev.rent.entity.RentStatus;
 import org.example.libdev.rent.service.RentService;
@@ -40,6 +41,21 @@ public class RentController {
         model.addAttribute("userId", userId);
 
         return "rent/selectRentByUser";
+    }
+
+    @GetMapping("/history/{userId}")
+    public String selectRentHistory(@PathVariable Long userId, Model model) {
+
+        List<ResponseHistoryRentDto> historyRentList = rentService.historyRentByUser(userId);
+
+        if(historyRentList.isEmpty()) {
+            model.addAttribute("error", "대여 내역이 없습니다.");
+        }
+
+        model.addAttribute("historyRentList", historyRentList);
+        model.addAttribute("userId", userId);
+
+        return "rent/selectRentHistory";
     }
 
     @GetMapping("/admin/managements")

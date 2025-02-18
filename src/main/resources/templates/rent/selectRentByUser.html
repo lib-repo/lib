@@ -2,11 +2,12 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>rent 내역 조회 페이지</title>
+    <title>대여 현황 조회 페이지</title>
     <link rel="stylesheet" type="text/css" href="/css/rent/selectRentByUser.css">
     <script src="/js/rent/selectRentByUser.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </head>
+
 <body class="rent-page-body">
 <div class="rent-page">
     <h2>대여 현황</h2>
@@ -18,7 +19,8 @@
         <label for="rent-status"></label>
         <form method="get" th:action="@{/api/rent/{userId}(userId=${userId})}">
             <select id="rent-status" name="status" onchange="this.form.submit()">
-                <option value="ALL" th:selected="${status == 'ALL' }">전체</option>
+                <option>선택</option>
+                <option value="ALL" th:selected="${status == 'ALL'}">전체</option>
                 <option value="RENTED" th:selected="${status == 'RENTED'}">대여중</option>
                 <option value="OVERDUE" th:selected="${status == 'OVERDUE'}">연체중</option>
             </select>

@@ -9,12 +9,13 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface RentRepository extends JpaRepository<Rent, Long> {
 
-    List<Rent> findByUser_UserIdxAndStatus(Long userIdx, RentStatus status);
-    List<Rent> findByStatus(RentStatus status);
+    Optional<List<Rent>> findByUser_UserIdxAndStatus(Long userIdx, RentStatus status);
+    Optional<List<Rent>> findByStatus(RentStatus status);
     Page<Rent> findByBookTitleContaining(String bookTitle, Pageable pageable);
-    List<Rent> findByUser_UserIdxAndStatusNot(Long userId, RentStatus status);
+    Optional<List<Rent>> findByUser_UserIdxAndStatusNot(Long userId, RentStatus status);
 }
