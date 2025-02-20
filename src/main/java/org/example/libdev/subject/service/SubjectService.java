@@ -19,15 +19,13 @@ public class SubjectService {
     public List<SubjectDto> findAll() {
         List<Subject> subjects = new ArrayList<>();
         subjectRepository.findAll().forEach(subjects::add);
-        List<SubjectDto> subjectDtos = subjects.stream()
-                .map(Subject::toDto).toList();
-        return subjectDtos;
+        return subjects.stream().map(Subject::toDto).toList();
     }
 
 
-    public SubjectDto findById(Long id) {
-        Subject subject = subjectRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("해당 id에 해당하는 주제가 존재하지 않습니다. : " + id));
+    public SubjectDto findByName(String subjectName) {
+        Subject subject = subjectRepository.findByName(subjectName)
+                .orElseThrow(() -> new NoSuchElementException("해당 이름에 해당하는 주제가 존재하지 않습니다. : " + subjectName));
         return subject.toDto();
     }
 

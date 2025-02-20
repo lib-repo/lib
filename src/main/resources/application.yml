@@ -1,0 +1,40 @@
+spring:
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: awsminseo
+    password: hxkkrofxjjhzeedh
+    properties:
+#      mail:
+        smtp:
+          auth: true
+          timeout: 5000
+          starttls:
+            enable: true
+
+  application:
+    name: LibDev
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/library
+    username: master
+    password: password
+    hikari:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+
+  sql:
+    init:
+      mode: always
+
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+      format_sql: true
+      show_sql: true
+    defer-datasource-initialization: true
+
+openapi:
+  key: 8f7cdb17ff64740d7fdf5df1818d65a732f89e9e6fac827c792106f5a6035462
+
+#  yml에 mail 부분만 직접 추가

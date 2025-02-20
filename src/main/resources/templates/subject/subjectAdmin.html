@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Thymeleaf Fragment Example</title>
-<!--    <link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap.min.css}">-->
+    <!--    <link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap.min.css}">-->
     <link rel="stylesheet" type="text/css" th:href="@{/css/subject.css}">
     <link
             rel="stylesheet"
@@ -17,7 +17,6 @@
 <body>
 <!-- Nav Fragment 호출 -->
 <!--<div th:replace="~{fragments/nav :: nav}"></div>-->
-
 <div class="app-wrapper">
     <div th:replace="~{fragments/adminNav :: adminNav}"></div>
     <div th:replace="~{fragments/adminSide :: adminSide}"></div>
@@ -28,10 +27,10 @@
             </div>
             <table>
                 <thead>
-                    <tr>
-                        <th>이름</th>
-                        <th>기능</th>
-                     </tr>
+                <tr>
+                    <th>이름</th>
+                    <th>기능</th>
+                </tr>
                 </thead>
                 <tbody>
                 <tr th:each="subject : ${subjects}">
@@ -41,6 +40,7 @@
                             <img src="/icon/modify.png" class="modify"></img>
                         </button>
                         <img src="/icon/delete.png" class="delete" th:onclick="|deleteSubject(${subject.id})|"></img>
+
                     </td>
                 </tr>
                 </tbody>
@@ -64,6 +64,21 @@
             input.type = 'text';
             input.value = originalValue;
             input.classList.add('editable-input');
+
+            // 원래 크기 유지
+            td.style.width = td.offsetWidth + 'px';
+            td.style.height = td.offsetHeight + 'px';
+
+            // input 스타일 조정
+            input.style.width = '100%';
+            input.style.height = '100%';
+            input.style.boxSizing = 'border-box';
+            input.style.border = 'none';
+            input.style.outline = 'none';
+            input.style.fontSize = 'inherit';
+            input.style.fontFamily = 'inherit';
+            input.style.textAlign = 'inherit';
+
             td.innerText = '';
             td.appendChild(input);
             input.focus();
@@ -155,6 +170,21 @@
     //추가 끝
 
 
+    //단건 조회
+    function getSubject(subjectName) {
+        axios.get('/api/subject/' + subjectName)
+            .then(response => {
+                const subject = response.data;
+                alert(`ID: ${subject.id}\n이름: ${subject.name}`);
+            })
+            .catch(error => {
+                console.error("Error fetching subject:", error);
+                alert("책 주제를 가져오는 데 실패했습니다.");
+            });
+    }
+
+
+    //삭제
     function deleteSubject(subjectId) {
         if (confirm("정말로 삭제하시겠습니까?")) {
             axios.delete('/api/subject/' + subjectId)

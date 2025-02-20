@@ -28,9 +28,9 @@ public class SubjectController {
         return "subjectAdmin";
     }
 
-    @GetMapping ("{subjectId}")
-    public ResponseEntity<SubjectDto> findById(@PathVariable Long subjectId){
-        SubjectDto subjectDto = subjectService.findById(subjectId); //매개변수를 안 넣어서 오류 경험
+    @GetMapping ("{subjectName}")
+    public ResponseEntity<SubjectDto> findByName(@PathVariable String subjectName){
+        SubjectDto subjectDto = subjectService.findByName(subjectName); //매개변수를 안 넣어서 오류 경험
         return new ResponseEntity<>(subjectDto, HttpStatus.OK);
     }
 
