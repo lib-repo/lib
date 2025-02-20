@@ -6,17 +6,27 @@
     padding: 20px;
 }
 
-.rent-page h2 {
-    text-align: left;
-    color: #333;
+.rent-page-h2 {
+    text-align: left; /* 왼쪽 정렬 */
+    padding-right: 630px; /* 왼쪽 여백 */
+    font-size: 20px; /* 폰트 크기 */
+    font-weight: bold; /* 굵은 글씨 */
+    color: #343a40; /* 어두운 색 */
 }
 
+.rent-page-h2 h2 {
+    margin: 0; /* 기본 margin 없애기 */
+}
+
+
 .rent-list {
+    margin-top: 100px;
     display: flex;
     flex-direction: column;
     gap: 20px;
     justify-content: center;
     align-items: center;
+    margin-left: 250px;
 }
 
 .rent-page-filter-bar {
@@ -27,7 +37,7 @@
     align-items: center;
     justify-content: flex-end;
     gap: 10px;
-    margin-left: 520px;
+    margin-left: 700px;
 }
 
 .rent-page-filter-bar label {
@@ -60,14 +70,13 @@
     display: inline-block;
 }
 
-
 .rent-item {
     background-color: #fff;
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     width: 100%;
-    max-width: 600px;
+    max-width: 800px;
     display: flex;
     gap: 20px;
     text-align: left;
@@ -75,7 +84,7 @@
 }
 
 .rent-item:hover {
-    transform: scale(1.05);
+    cursor: auto;
 }
 
 .book-cover {
@@ -86,6 +95,7 @@
 }
 
 .book-info {
+    padding-left: 15px;
     flex: 1;
 }
 
@@ -96,35 +106,21 @@
     margin-bottom: 10px;
 }
 
-.book-status.rented {
-    background-color: #4caf50;
-    color: white;
-}
-
-.book-status.returned {
-    background-color: #2196f3;
-    color: white;
-}
-
-.book-status.overdue {
-    background-color: #f44336;
-    color: white;
-}
-
 .book-info p {
     margin: 5px 0;
     color: #555;
 }
 
 button.extend-btn {
-    background-color: #ff9800;
+    background-color: black;;
     color: white;
     border: none;
-    padding: 10px 20px;
+    padding: 5px 15px;
+    height: 40px;
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s ease;
-    margin-top: 10px;
+    margin-top: 130px;
 }
 
 button.extend-btn:hover {
