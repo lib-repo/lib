@@ -1,3 +1,5 @@
+import { API } from './api.js';
+
 let isbn = '';
 let currentBookId = null;
 let initialRender = true;
@@ -7,7 +9,7 @@ async function handleSearchBookByIsbn() {
     isbn = document.getElementById('isbn-input').value;
     console.log(isbn);
 
-    const response =  await axios.get(`/api/books/search/${isbn}`);
+    const response =  await axios.get(API.BOOKS.url + `/search/${isbn}`);
     const bookData = response.data;
 
     if (bookData) {
@@ -43,10 +45,10 @@ async function handleRegisterBook(event) {
 
     try {
         if (currentBookId) {
-            await axios.put(`/api/books/${currentBookId}`, bookData);
+            await axios.put(API.BOOKS.url + `/${currentBookId}`, bookData);
             alert('책 수정이 완료되었습니다.');
         } else {
-            await axios.post(`/api/books`, bookData);
+            await axios.post(API.BOOKS.url, bookData);
             alert('책 등록이 완료되었습니다.');
         }
 
@@ -68,7 +70,7 @@ async function handleEditBook(event) {
     console.log(`수정할 책 ID: ${bookId}`);
 
     try {
-        const response = await axios.get(`/api/books/${bookId}`);
+        const response = await axios.get(API.BOOKS.url + `/${bookId}`);
         const bookData = response.data;
 
         document.getElementById('isbn-input').value = bookData.isbn;
@@ -109,7 +111,7 @@ async function handleDeleteBook(event) {
 
     if (confirm(`삭제하시겠습니까?`)) {
         try {
-            await axios.delete(`/api/books/${bookId}`);
+            await axios.delete(API.BOOKS.url + `/${bookId}`);
             alert('책이 삭제되었습니다.');
 
             updateBookList();
@@ -123,7 +125,7 @@ async function handleDeleteBook(event) {
 // 도서 리스트가 변경되면 업데이트
 async function updateBookList() {
     try {
-        const response = await axios.get(`/api/books`);
+        const response = await axios.get(API.BOOKS.url);
         const books = response.data;
 
         const bookList = document.getElementById('book-list');

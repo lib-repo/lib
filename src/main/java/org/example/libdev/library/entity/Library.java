@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.example.libdev.book.entity.Book;
+import org.example.libdev.availabiliy.entity.Availability;
 import org.example.libdev.global.entity.BaseEntity;
 import org.example.libdev.library.dto.LibraryResponseDTO;
 
@@ -36,8 +36,8 @@ public class Library extends BaseEntity {
     @Column(name = "library_phone")
     private String libraryPhone;
 
-    @ManyToMany(mappedBy = "libraries", fetch = FetchType.LAZY)
-    private List<Book> books;
+    @OneToMany(mappedBy = "library", fetch = FetchType.LAZY)
+    private List<Availability> bookAvailabilities;
 
     public LibraryResponseDTO toResponseDTO() {
         return LibraryResponseDTO.builder()
