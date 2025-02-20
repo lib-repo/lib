@@ -4,10 +4,12 @@ import lombok.RequiredArgsConstructor;
 import org.example.libdev.book.dto.BookRequestDTO;
 import org.example.libdev.book.dto.BookResponseDTO;
 import org.example.libdev.book.service.BookService;
+import org.json.JSONException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -19,32 +21,60 @@ public class BookRestController {
 
     @GetMapping
     public ResponseEntity<List<BookResponseDTO>> getAllBooks() {
-        return ResponseEntity.ok(bookService.getAllBooks());
+        try {
+            return ResponseEntity.ok(bookService.getAllBooks());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Collections.emptyList());
+        }
     }
 
     @GetMapping("/{bookId}")
     public ResponseEntity<BookResponseDTO> getBookById(@PathVariable Long bookId) {
-        return ResponseEntity.ok(bookService.getBookById(bookId));
+        try {
+            return ResponseEntity.ok(bookService.getBookById(bookId));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
     }
 
     @GetMapping("/search/{isbn}")
     public ResponseEntity<BookResponseDTO> getBookInfoByIsbn(@PathVariable String isbn) {
-        return ResponseEntity.ok(bookService.getBookInfoByIsbn(isbn));
+        try {
+            BookResponseDTO bookResponseDTO = bookService.getBookInfoByIsbn(isbn);
+            return ResponseEntity.ok(bookResponseDTO);
+        } catch (JSONException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
     }
 
     @PostMapping
     public ResponseEntity<BookResponseDTO> createBook(@RequestBody BookRequestDTO bookRequestDTO) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(bookService.createBook(bookRequestDTO));
+        try {
+            return ResponseEntity.status(HttpStatus.CREATED).body(bookService.createBook(bookRequestDTO));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
     }
 
     @PutMapping("/{bookId}")
     public ResponseEntity<BookResponseDTO> updateBook(@PathVariable Long bookId, @RequestBody BookRequestDTO bookRequestDTO) {
-        return ResponseEntity.ok(bookService.updateBook(bookId, bookRequestDTO));
+        try {
+            return ResponseEntity.ok(bookService.updateBook(bookId, bookRequestDTO));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
     }
 
     @DeleteMapping("/{bookId}")
-    public ResponseEntity<Void> deleteBookById(@PathVariable Long bookId) {
-        bookService.deleteBookById(bookId);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity deleteBookById(@PathVariable Long bookId) {
+        try {
+            bookService.deleteBookById(bookId);
+            return ResponseEntity.ok("삭제가 완료되었습니다.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
     }
 }

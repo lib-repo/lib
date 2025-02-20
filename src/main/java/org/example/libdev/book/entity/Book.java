@@ -1,18 +1,16 @@
 package org.example.libdev.book.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.example.libdev.availabiliy.entity.Availability;
 import org.example.libdev.book.dto.BookResponseDTO;
 import org.example.libdev.global.entity.BaseEntity;
-import org.example.libdev.library.entity.Library;
 import org.example.libdev.subject.entity.Subject;
 
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -42,21 +40,15 @@ public class Book extends BaseEntity {
     @Column(name = "image_url", nullable = true)
     private String imageUrl;
 
-    @Column(name = "description", nullable = false)
+    @Column(name = "description", nullable = true)
     private String description;
-
-    @Column(name = "available")
-    private Boolean available;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "subject_id")
     private Subject subject;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "book_libraries",
-            joinColumns = @JoinColumn(name = "book_id"),
-            inverseJoinColumns = @JoinColumn(name = "library_id"))
-    private List<Library> libraries;
+    @OneToMany(mappedBy = "book", fetch = FetchType.LAZY)
+    private List<Availability> bookAvailabilities;
 
     public BookResponseDTO toResponseDTO() {
         return BookResponseDTO.builder()

@@ -2,9 +2,12 @@ package org.example.libdev.book.dto;
 
 import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.example.libdev.book.entity.Book;
 
-@Data
+@Getter
+@Setter
 @Builder
 public class BookRequestDTO {
     private String title;
