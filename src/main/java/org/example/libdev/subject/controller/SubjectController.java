@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Slf4j
 @Controller
 @RequestMapping("/api/subject")
 @RequiredArgsConstructor
@@ -21,11 +22,18 @@ public class SubjectController {
     private final SubjectService subjectService;
 
     //사용자 :admin
-    @GetMapping ("all")
-    public String findAll(Model model){
+    @GetMapping("/all")
+    public String findAll(Model model) {
+        log.info("🔍 [START] GET /api/subject/all 요청 수신");
+
+        // 과목 목록 조회
         List<SubjectDto> subjectDtos = subjectService.findAll();
+        log.info("📌 조회된 과목 개수: {}", subjectDtos.size());
+
         model.addAttribute("subjects", subjectDtos);
-        return "subjectAdmin";
+
+        log.info("✅ [END] 데이터 모델에 추가 완료. 페이지 반환: subjectAdmin");
+        return "subject/subjectAdmin";
     }
 
     @GetMapping ("{subjectName}")
