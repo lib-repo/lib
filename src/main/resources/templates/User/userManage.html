@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>회원 관리</title>
+  <link rel="stylesheet" type="text/css" th:href="@{/css/adminlte.css}">
+</head>
+<body>
+<div class="app-wrapper">
+  <div th:replace="~{fragments/nav :: nav}"></div> <!-- nav.html 사용 -->
+
+  <main>
+    <h2>회원 관리</h2>
+    <table class="table">
+      <thead>
+      <tr>
+        <th>번호</th>
+        <th>아이디</th>
+        <th>이름</th>
+        <th>휴대전화</th>
+        <th>이메일</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="user, stat : ${userList}">
+        <td th:text="${stat.count}"></td>
+        <td th:text="${user.userId}"></td>
+        <td th:text="${user.userName}"></td>
+        <td th:text="${user.phone}"></td>
+        <td th:text="${user.email}"></td>
+      </tr>
+      </tbody>
+    </table>
+  </main>
+</div>
+</body>
+</html>

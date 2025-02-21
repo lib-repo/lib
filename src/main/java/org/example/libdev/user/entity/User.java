@@ -32,10 +32,22 @@ public class User extends BaseEntity {
     @Column(name = "email", nullable = false, unique = true)
     private String email;
 
+<<<<<<< HEAD
     @Column(name = "phone", nullable = false, unique = true)
+=======
+    @Column(name = "phone")
+>>>>>>> 0c85e4c (유저)
     private String phone;
 
     @Column(name = "auth", nullable = false)
     private String auth;
 
+<<<<<<< HEAD
+=======
+    @Column(name = "provider")
+    private String provider;
+
+    @Column(name = "provider_id")
+    private String providerId;
+>>>>>>> 0c85e4c (유저)
 }

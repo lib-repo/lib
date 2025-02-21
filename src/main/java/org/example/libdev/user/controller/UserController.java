@@ -2,6 +2,10 @@ package org.example.libdev.user.controller;
 
 import org.example.libdev.user.dto.UserRequestDto;
 import org.example.libdev.user.dto.UserLoginDto;
+<<<<<<< HEAD
+=======
+import org.example.libdev.user.entity.User;
+>>>>>>> 0c85e4c (유저)
 import org.example.libdev.user.service.AuthCodeService;
 import org.example.libdev.user.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -9,6 +13,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+<<<<<<< HEAD
+=======
+import java.util.List;
+
+>>>>>>> 0c85e4c (유저)
 @Controller
 @RequestMapping("/user")
 @RequiredArgsConstructor
@@ -86,5 +95,15 @@ public class UserController {
         userService.resetPasswordWithCode(userId, email, code, newPassword);
         return "redirect:/user/login";
     }
+<<<<<<< HEAD
+=======
+
+    @GetMapping("/manage")
+    public String userList(Model model) {
+        List<User> users = userService.findAllUsers();
+        model.addAttribute("userList", users);
+        return "userManage";
+    }
+>>>>>>> 0c85e4c (유저)
 }
 
