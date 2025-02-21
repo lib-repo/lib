@@ -5,12 +5,27 @@
     padding: 20px;
 }
 
+.rent-history-h2 {
+    text-align: center;
+    padding-right: 400px;
+    font-size: 20px;
+    font-weight: bold;
+    color: black;
+    margin-top: 100px;
+}
+
+.rent-page-h2 h2 {
+    margin: 0;
+}
+
 .rent-history-list {
     display: flex;
     flex-direction: column;
     gap: 20px;
     justify-content: center;
     align-items: center;
+    margin-left: 250px;
+    margin-top: 50px;
 }
 
 .rent-history-item {
@@ -19,7 +34,7 @@
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     width: 100%;
-    max-width: 600px;
+    max-width: 800px;
     display: flex;
     gap: 20px;
     text-align: left;
@@ -27,7 +42,7 @@
 }
 
 .rent-history-item:hover {
-    transform: scale(1.05);
+    cursor: auto;
 }
 
 .rent-history-book-cover {
@@ -38,6 +53,7 @@
 }
 
 .rent-history-book-info {
+    padding-left: 30px;
     flex: 1;
 }
 

@@ -9,17 +9,21 @@
 </head>
 
 <body class="rent-page-body">
-<div class="rent-page">
-    <h2>대여 현황</h2>
-</div>
-
 <div class="rent-list">
 
+    <div th:replace="~{fragments/userHeader}"></div>
+    <div th:replace="~{fragments/userSideBar}"></div>
+
+    <div class="rent-page-h2">
+        <h2>
+            상호대차 현황
+        </h2>
+    </div>
     <div class="rent-page-filter-bar" th:data-user-id="${userId}">
         <label for="rent-status"></label>
         <form method="get" th:action="@{/api/rent/{userId}(userId=${userId})}">
             <select id="rent-status" name="status" onchange="this.form.submit()">
-                <option>선택</option>
+                <option value="">선택</option>
                 <option value="ALL" th:selected="${status == 'ALL'}">전체</option>
                 <option value="RENTED" th:selected="${status == 'RENTED'}">대여중</option>
                 <option value="OVERDUE" th:selected="${status == 'OVERDUE'}">연체중</option>
@@ -31,14 +35,10 @@
         <div class="rent-item">
             <div class="book-cover"></div>
             <div class="book-info">
-<!--                    <span class="book-status"-->
-<!--                          th:classappend="${rent.status == 'RENTED' ? 'rented' : (rent.status == 'RETURNED' ? 'returned' : 'overdue')}">-->
-<!--                        [[${rent.status}]]-->
-<!--                    </span>-->
                 <p>도서명 : [[${rent.book.title}]]</p>
                 <p>대여 기간 : [[${rent.rentDate}]] ~ [[${rent.returnDate}]]</p>
                 <p>대여 상태 :
-                    <span th:if="${#strings.equals(rent.status, 'RENTED')}">대출중</span>
+                    <span th:if="${#strings.equals(rent.status, 'RENTED')}">대여중</span>
                     <span th:if="${#strings.equals(rent.status, 'OVERDUE')}">연체중</span>
                 </p>
                 <p>연장 여부 :

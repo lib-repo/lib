@@ -11,12 +11,14 @@
 }
 
 .admin-rent-search {
+    margin-right: 80px;
     display: flex;
     justify-content: right;
     margin-bottom: 20px;
 }
 
 .admin-rent-search-input {
+    margin-top: 100px;
     padding: 8px 12px;
     width: 300px;
     border: 1px solid #ddd;
@@ -49,9 +51,9 @@
     cursor: not-allowed;
 }
 
-
 .admin-rent-table {
-    width: 100%;
+    justify-content: center;
+    width: 97%;
     border-collapse: collapse;
     background: white;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -97,15 +99,15 @@
 }
 
 .admin-rent-btn-return {
-    background-color: #e74c3c;
+    background-color: #555;
 }
 
 .admin-rent-btn-extend {
-    background-color: #2ecc71;
+    background-color: #555;
 }
 
 .admin-rent-btn-notify {
-    background-color: #3498db;
+    background-color: #555;
 }
 
 .admin-rent-btn:hover {

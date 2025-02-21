@@ -29,6 +29,9 @@ public class RentController {
     @GetMapping("/{userId}")
     public String selectRentByUser(@PathVariable Long userId, @RequestParam(required = false) String status, Model model) {
 
+        if (status == null || status.isEmpty()) {
+            status = "ALL";
+        }
 
         List<ResponseRentDto> rents = rentService.selectRentByUserId(userId, status);
 
