@@ -43,7 +43,7 @@ public class Book extends BaseEntity {
     @Column(name = "description", nullable = true)
     private String description;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "subject_id")
     private Subject subject;
 
@@ -60,11 +60,7 @@ public class Book extends BaseEntity {
                 .publicationYear(publicationYear)
                 .imageUrl(imageUrl)
                 .description(description)
+                .subject(subject)
                 .build();
-    }
-
-    // 책 반납 시 다시 대출 가능 상태로 변경
-    public void updateAvailable(Boolean available) {
-        this.available = available;
     }
 }

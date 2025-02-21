@@ -1,6 +1,7 @@
 package org.example.libdev.book.controller;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.example.libdev.book.dto.BookRequestDTO;
 import org.example.libdev.book.dto.BookResponseDTO;
 import org.example.libdev.book.service.BookService;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Collections;
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/books")
 @RequiredArgsConstructor
@@ -53,6 +55,7 @@ public class BookRestController {
     @PostMapping
     public ResponseEntity<BookResponseDTO> createBook(@RequestBody BookRequestDTO bookRequestDTO) {
         try {
+            log.info("bookReqDTO.subjectId: {}", bookRequestDTO.getSubjectId());
             return ResponseEntity.status(HttpStatus.CREATED).body(bookService.createBook(bookRequestDTO));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
