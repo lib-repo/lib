@@ -1,10 +1,9 @@
 package org.example.libdev.book.controller;
 
-
 import lombok.RequiredArgsConstructor;
 import org.example.libdev.availabiliy.entity.Availability;
 import org.example.libdev.book.service.BookService;
-import org.example.libdev.library.service.LibraryService;
+import org.example.libdev.subject.repository.SubjectRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,13 +19,15 @@ import java.util.List;
 public class BookController {
 
     private final BookService bookService;
+    private final SubjectRepository subjectRepository;
 
     @GetMapping
     public String getAllBooks(Model model) {
         try {
             model.addAttribute("books", bookService.getAllBooks());
+            model.addAttribute("subjects", subjectRepository.findAll());
 
-            return "bookManagement";
+            return "book/bookManagement";
         } catch (Exception e) {
             model.addAttribute("errorMessage", e.getMessage());
             return "error";
@@ -49,7 +50,7 @@ public class BookController {
             model.addAttribute("libs", availableLibraries);
             model.addAttribute("book", bookService.getBookById(bookId));
 
-            return "bookDetail";
+            return "book/bookDetail";
         } catch (Exception e) {
             model.addAttribute("errorMessage", e.getMessage());
             return "error";

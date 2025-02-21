@@ -1,23 +1,24 @@
 package org.example.libdev.book.service;
 
-import jakarta.annotation.PostConstruct;
-import org.springframework.cache.annotation.Cacheable;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.libdev.availabiliy.entity.Availability;
 import org.example.libdev.availabiliy.repository.AvailabilityRepository;
 import org.example.libdev.book.dto.BookRequestDTO;
 import org.example.libdev.book.dto.BookResponseDTO;
+import org.example.libdev.book.entity.Book;
+import org.example.libdev.book.repository.BookRepository;
 import org.example.libdev.library.entity.Library;
 import org.example.libdev.library.repository.LibraryRepository;
-import org.json.JSONArray;
+import org.example.libdev.subject.entity.Subject;
+import org.example.libdev.subject.repository.SubjectRepository;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
-import org.example.libdev.book.entity.Book;
-import org.example.libdev.book.repository.BookRepository;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -34,6 +35,9 @@ import java.util.concurrent.Executors;
 public class BookService {
 
     private final LibraryRepository libraryRepository;
+    private final SubjectRepository subjectRepository;
+    private final RedisTemplate<String, Availability> redisTemplate;
+
     @Value("${openapi.key}")
     private String apiKey;
 
@@ -44,55 +48,6 @@ public class BookService {
 
     private final ExecutorService executorService = Executors.newFixedThreadPool(20);
 
-    @PostConstruct
-    public void init() {
-        saveBooks();
-    }
-
-    public void saveBooks() {
-        try {
-            String url = String.format("http://data4library.kr/api/srchBooks?authKey=%s&pageSize=100&format=json", apiKey);
-
-            ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
-
-            if (response.getStatusCode() != HttpStatus.OK) {
-                log.error("API 호출 실패: {}", response.getStatusCode());
-                throw new RuntimeException("API 호출 실패");
-            }
-
-            String body = response.getBody();
-            log.debug("응답 본문: {}", body);
-
-            JSONObject jsonResponse = new JSONObject(body);
-
-            if (!jsonResponse.has("response") || !jsonResponse.getJSONObject("response").has("docs")) {
-                log.error("응답에서 'docs'을 찾을 수 없습니다.");
-                throw new RuntimeException("응답에서 'docs'을 찾을 수 없습니다.");
-            }
-
-            JSONArray docs = jsonResponse.getJSONObject("response").getJSONArray("docs");
-
-            for (int i = 0; i < docs.length(); i++) {
-                JSONObject doc = docs.getJSONObject(i).getJSONObject("doc");
-
-                Book book = new Book();
-                book.setTitle(doc.getString("bookname"));
-                book.setAuthor(doc.getString("authors"));
-                book.setIsbn(doc.getString("isbn13"));
-                book.setPublisher(doc.getString("publisher"));
-                book.setPublicationYear(doc.getString("publication_year"));
-                book.setImageUrl(doc.getString("bookImageURL"));
-
-                bookRepository.save(book);
-            }
-        } catch (JSONException e) {
-            log.error("JSON 파싱 중 오류 발생: {}", e.getMessage());
-            throw new RuntimeException("JSON 파싱 중 오류가 발생했습니다.");
-        } catch (Exception e) {
-            log.error("예외 발생: {}", e.getMessage());
-            throw new RuntimeException("책 정보를 처리하는 중 오류가 발생했습니다.");
-        }
-    }
 
     // 전체 도서 조회
     public List<BookResponseDTO> getAllBooks() {
@@ -168,6 +123,10 @@ public class BookService {
     public BookResponseDTO createBook(BookRequestDTO bookRequestDTO) {
         try {
             Book newBook = bookRequestDTO.toEntity();
+            Subject subject = subjectRepository.findById(bookRequestDTO.getSubjectId())
+                    .orElseThrow(() -> new NoSuchElementException("해당 ID의 주제를 찾을 수 없습니다."));
+
+            newBook.setSubject(subject);
 
             return bookRepository.save(newBook).toResponseDTO();
         } catch (Exception e) {
@@ -182,6 +141,10 @@ public class BookService {
             Book existingBook = bookRepository.findById(bookId)
                     .orElseThrow(() -> new NoSuchElementException("해당 ID의 도서를 찾을 수 없습니다." + bookId));
 
+            Subject subject = subjectRepository.findById(bookRequestDTO.getSubjectId())
+                    .orElseThrow(() -> new NoSuchElementException("해당 ID의 주제를 찾을 수 없습니다."));
+
+            existingBook.setSubject(subject);
             existingBook.setTitle(bookRequestDTO.getTitle());
             existingBook.setAuthor(bookRequestDTO.getAuthor());
             existingBook.setIsbn(bookRequestDTO.getIsbn());
@@ -216,12 +179,18 @@ public class BookService {
     }
 
     // 도서 대여 가능 여부 확인
-//    @Cacheable(value = "availability", key = "#bookId", unless = "#result == null", cacheManager = "cacheManager")
     public List<Availability> checkAvailability(Long bookId) {
+        List<Availability> availableLibraries = getAvailabilityFromCache(bookId);
+        log.info("availableLibraries: {}", availableLibraries);
+
         Book book = bookRepository.findById(bookId)
                 .orElseThrow(() -> new NoSuchElementException("해당 ID의 도서를 찾을 수 없습니다." + bookId));
 
         List<Availability> availabilityList = availabilityRepository.findByBook(book);
+
+//        if (availableLibraries != null && !availableLibraries.isEmpty()) {
+//            return availabilityList;
+//        }
 
         if (availabilityList.isEmpty()) {
             List<Library> libraries = libraryRepository.findAll();
@@ -246,6 +215,8 @@ public class BookService {
         }
 
         CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
+        saveAvailabilityToCache(bookId, availabilityList);
+
         return availabilityList;
     }
 
@@ -277,6 +248,11 @@ public class BookService {
                 }
 
                 availabilityRepository.save(availability);
+
+                String cacheKey = "availability:" + book.getBookId();
+                redisTemplate.opsForList().remove(cacheKey, 0, availability);
+                redisTemplate.opsForList().rightPush(cacheKey, availability);
+
             } catch (JSONException e) {
                 log.error("JSON 파싱 중 오류 발생: {}",e.getMessage());
                 throw new RuntimeException("JSON 파싱 중 오류가 발생했습니다.");
@@ -289,5 +265,24 @@ public class BookService {
 
     public void shutdown() {
         executorService.shutdown();
+    }
+
+    // Redis 캐시 조회
+    public List<Availability> getAvailabilityFromCache(Long bookId) {
+        String cacheKey = "availability:" + bookId;
+        return redisTemplate.opsForList().range(cacheKey, 0, -1);
+    }
+
+    // 캐시 저장
+    public void saveAvailabilityToCache(Long bookId, List<Availability> availabilityList) {
+        String cacheKey = "availability:" + bookId;
+        redisTemplate.opsForList().rightPushAll(cacheKey, availabilityList);
+    }
+
+    // 캐시 초기화
+    @Scheduled(cron = "0 0 0 * * ?")
+    public void clearRedisCache() {
+        redisTemplate.getConnectionFactory().getConnection().flushAll();
+        log.info("clear redis cache");
     }
 }

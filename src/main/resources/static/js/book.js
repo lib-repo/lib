@@ -35,6 +35,7 @@ async function handleRegisterBook(event) {
 
     const bookData = {
         isbn: document.getElementById('isbn-input').value,
+        subjectId: document.getElementById('subject').value,
         title: document.getElementById('title').value,
         author: document.getElementById('author').value,
         publisher: document.getElementById('publisher').value,
@@ -80,6 +81,7 @@ async function handleEditBook(event) {
         document.getElementById('publicationYear').value = bookData.publicationYear;
         document.getElementById('description').value = bookData.description;
         document.getElementById('imageUrl').value = bookData.imageUrl;
+
 
         currentBookId = bookId;
 
@@ -168,6 +170,13 @@ function addEventListenersToButtons() {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
+    function initSelect() {
+        var selectElems = document.querySelectorAll('select');
+        M.FormSelect.init(selectElems);
+    }
+
+    initSelect();
+
     var elems = document.querySelectorAll('.modal');
     var instances = M.Modal.init(elems, {
         onCloseEnd: function () {
@@ -178,12 +187,17 @@ document.addEventListener('DOMContentLoaded', function () {
             document.getElementById('publicationYear').value = '';
             document.getElementById('description').value = '';
             document.getElementById('imageUrl').value = '';
+            document.querySelectorAll('select').forEach(function (select) {
+                select.value = '';
+            })
 
             M.updateTextFields();
 
             document.querySelector('#book-register-modal h5').innerText = "도서 등록";
             document.getElementById('registerButton').innerText = "등록";
             currentBookId = null;
+
+            initSelect();
         }
     });
 

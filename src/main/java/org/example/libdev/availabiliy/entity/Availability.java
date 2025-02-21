@@ -1,5 +1,6 @@
 package org.example.libdev.availabiliy.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 import org.example.libdev.book.entity.Book;
@@ -13,6 +14,7 @@ import org.example.libdev.library.entity.Library;
 @AllArgsConstructor
 @Builder
 @Table(name = "book_libraries")
+@JsonIgnoreProperties({"book", "library"})
 public class Availability extends BaseEntity {
 
     @Id
@@ -22,11 +24,11 @@ public class Availability extends BaseEntity {
     @Column(name = "available")
     private boolean available;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "book_id")
     private Book book;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "library_id")
     private Library library;
 }

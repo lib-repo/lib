@@ -3,6 +3,7 @@ package org.example.libdev.book.dto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import org.example.libdev.subject.entity.Subject;
 
 @Getter
 @Setter
@@ -16,4 +17,5 @@ public class BookResponseDTO {
     private String publicationYear;
     private String imageUrl;
     private String description;
+    private Subject subject;
 }
