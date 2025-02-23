@@ -5,7 +5,6 @@
   <title>Title</title>
   <style>
 
-    /* 카테고리 메뉴 */
     .category-menu {
       display: flex;
       justify-content: center;
@@ -40,7 +39,6 @@
       border-radius: 5px;
     }
 
-    /* 드롭다운 메뉴 */
     .category-menu ul > li > ul {
       display: none;
       position: absolute;
@@ -74,6 +72,14 @@
 
     .category-menu ul > li:hover > ul {
       display: block;
+    }
+
+    body .category-menu{
+      position: absolute;
+      width: 100%;
+      top: 75px;
+      left: 0;
+      z-index: 1000;
     }
   </style>
 </head>
