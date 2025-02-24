@@ -6,35 +6,22 @@ import org.example.libdev.user.entity.User;
 import org.example.libdev.user.security.JwtUtil;
 import org.example.libdev.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-<<<<<<< HEAD
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-
-=======
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
->>>>>>> 0c85e4c (유저)
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
 
-<<<<<<< HEAD
-    private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
-    private final JwtUtil jwtUtil;
-    private final AuthCodeService authCodeService;
-=======
     private final @Lazy UserRepository userRepository;
     private final @Lazy PasswordEncoder passwordEncoder;
     private final @Lazy JwtUtil jwtUtil;
     private final @Lazy AuthCodeService authCodeService;
 
->>>>>>> 0c85e4c (유저)
 
     public String register(UserRequestDto requestDto) {
         if (userRepository.findByUserId(requestDto.getUserId()).isPresent()) {
@@ -98,10 +85,7 @@ public class UserService {
         authCodeService.removeCode(email);
     }
 
-<<<<<<< HEAD
-=======
     public List<User> findAllUsers() {
         return userRepository.findAll();
     }
->>>>>>> 0c85e4c (유저)
 }
