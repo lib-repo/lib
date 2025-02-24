@@ -38,19 +38,19 @@ public class BookController {
     public String bookDetail(@PathVariable("bookId") Long bookId, Model model) {
         try {
 
-            List<Availability>  Availabilities =  bookService.checkAvailability(bookId);
+//            List<Availability>  Availabilities =  bookService.checkAvailability(bookId);
+//
+//            List<Availability> availableLibraries = new ArrayList<>();
+//            for (Availability availability : Availabilities) {
+//                if (availability.isAvailable()) {
+//                    availableLibraries.add(availability);
+//                }
+//            }
 
-            List<Availability> availableLibraries = new ArrayList<>();
-            for (Availability availability : Availabilities) {
-                if (availability.isAvailable()) {
-                    availableLibraries.add(availability);
-                }
-            }
-
-            model.addAttribute("libs", availableLibraries);
+//            model.addAttribute("libs", availableLibraries);
             model.addAttribute("book", bookService.getBookById(bookId));
 
-            return "book/bookDetail";
+            return "bookDetail";
         } catch (Exception e) {
             model.addAttribute("errorMessage", e.getMessage());
             return "error";
