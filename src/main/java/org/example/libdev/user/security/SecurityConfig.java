@@ -1,11 +1,8 @@
 package org.example.libdev.user.security;
 
 import lombok.RequiredArgsConstructor;
-<<<<<<< HEAD
-=======
 import org.example.libdev.user.service.OauthUserService;
 import org.springframework.context.ApplicationContext;
->>>>>>> 0c85e4c (유저)
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -16,26 +13,18 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-<<<<<<< HEAD
-import org.springframework.security.web.SecurityFilterChain;
-=======
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.beans.factory.ObjectProvider;
->>>>>>> 0c85e4c (유저)
 
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-<<<<<<< HEAD
-    private final UserDetailsService userDetailsService;
-=======
     private final ApplicationContext applicationContext;
     private final UserDetailsService userDetailsService;
     private final ObjectProvider<OauthUserService> oauthUserServiceProvider; // ✅ ObjectProvider 사용
->>>>>>> 0c85e4c (유저)
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -59,10 +48,6 @@ public class SecurityConfig {
                         .requestMatchers("/css/**", "/js/**", "/images/**").permitAll()
                         .requestMatchers("/user/find-password/**").permitAll()
                         .requestMatchers("/user/find-id/**").permitAll()
-<<<<<<< HEAD
-                        .requestMatchers("/", "/home", "/user/register" ,"/user/login").permitAll()
-                        .anyRequest().authenticated() // 그 외 요청은 인증 필요
-=======
                         .requestMatchers("/", "/home", "/user/register", "/user/login").permitAll()
                         .requestMatchers("/oauth2/**").permitAll()
                         .requestMatchers("/user/manage").permitAll() //.hasRole("ADMIN") 테스트
@@ -74,13 +59,8 @@ public class SecurityConfig {
                                 userInfo.userService(oauthUserServiceProvider.getIfAvailable())
                         )
                         .defaultSuccessUrl("/", true)
->>>>>>> 0c85e4c (유저)
                 );
 
         return http.build();
     }
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> 0c85e4c (유저)
