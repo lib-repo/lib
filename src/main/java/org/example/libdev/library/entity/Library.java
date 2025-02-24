@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.example.libdev.availabiliy.entity.Availability;
+import org.example.libdev.availability.entity.Availability;
 import org.example.libdev.global.entity.BaseEntity;
 import org.example.libdev.library.dto.LibraryResponseDTO;
 

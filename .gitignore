@@ -1,3 +1,7 @@
+# Ignore build output directories
+build/
+**/build/
+
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
@@ -36,3 +40,7 @@ out/
 # Ignore YAML files
 *.yml
 *.yaml
+
+# Ignore Gradle cache and configuration
+.gradle
+.gradle/

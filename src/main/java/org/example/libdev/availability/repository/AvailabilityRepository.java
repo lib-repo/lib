@@ -1,6 +1,6 @@
-package org.example.libdev.availabiliy.repository;
+package org.example.libdev.availability.repository;
 
-import org.example.libdev.availabiliy.entity.Availability;
+import org.example.libdev.availability.entity.Availability;
 import org.example.libdev.book.entity.Book;
 import org.springframework.data.jpa.repository.JpaRepository;
 

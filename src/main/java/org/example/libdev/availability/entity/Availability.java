@@ -1,4 +1,4 @@
-package org.example.libdev.availabiliy.entity;
+package org.example.libdev.availability.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;

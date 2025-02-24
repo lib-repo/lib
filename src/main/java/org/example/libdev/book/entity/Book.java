@@ -2,7 +2,7 @@ package org.example.libdev.book.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.example.libdev.availabiliy.entity.Availability;
+import org.example.libdev.availability.entity.Availability;
 import org.example.libdev.book.dto.BookResponseDTO;
 import org.example.libdev.global.entity.BaseEntity;
 import org.example.libdev.subject.entity.Subject;

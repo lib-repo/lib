@@ -2,8 +2,8 @@ package org.example.libdev.book.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.example.libdev.availabiliy.entity.Availability;
-import org.example.libdev.availabiliy.repository.AvailabilityRepository;
+import org.example.libdev.availability.entity.Availability;
+import org.example.libdev.availability.repository.AvailabilityRepository;
 import org.example.libdev.book.dto.BookRequestDTO;
 import org.example.libdev.book.dto.BookResponseDTO;
 import org.example.libdev.book.entity.Book;
