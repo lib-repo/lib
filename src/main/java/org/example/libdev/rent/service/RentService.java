@@ -50,9 +50,9 @@ public class RentService {
                 ()->new IllegalStateException("책을 찾을 수 없습니다.")
         );
 
-        if (!book.getAvailable()) {
-            throw new IllegalStateException("책이 대출 가능한 상태가 아닙니다.");
-        }
+//        if (!book.getAvailable()) {
+//            throw new IllegalStateException("책이 대출 가능한 상태가 아닙니다.");
+//        }
 
         User user = userRepository.findById(userId).orElseThrow(
                 ()->new IllegalStateException("사용자를 찾을 수 없습니다.")
@@ -167,7 +167,7 @@ public class RentService {
 
         Book availableBook = returnRent.getBook();
 
-        availableBook.updateAvailable(true);
+//        availableBook.updateAvailable(true);
         LocalDate returnDate = LocalDate.now();
         returnRent.updateReturnStatusAndDate(RentStatus.RETURNED, returnDate.toString());
 
