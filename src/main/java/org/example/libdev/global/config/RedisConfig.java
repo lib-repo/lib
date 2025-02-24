@@ -3,7 +3,7 @@ package org.example.libdev.global.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import org.example.libdev.availabiliy.entity.Availability;
+import org.example.libdev.availability.entity.Availability;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
