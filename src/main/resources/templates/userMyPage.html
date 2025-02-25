@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>유저 마이페이지</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/mypage.css}">
+
+
+</head>
+<body>
+<div th:replace="~{fragments/userMyPage/myPageNav :: myPageNav}"></div>
+<div th:replace="~{fragments/userMyPage/middle-header :: middle-header}"></div>
+<div th:replace="~{fragments/userMyPage/myPageSide :: myPageSide}"></div>
+
+<div class="content">
+  <div class="content-body" id="content-body">
+
+  </div>
+</div>
+</body>
+</html>
