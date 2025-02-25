@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>대여 현황 조회 페이지</title>
+    <link rel="stylesheet" type="text/css" href="/css/rent/selectRentByUser.css">
+    <script src="/js/rent/selectRentByUser.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+
+<body class="rent-page-body">
+<div class="rent-list">
+
+    <div th:replace="~{fragments/userHeader}"></div>
+    <div th:replace="~{fragments/userSideBar}"></div>
+
+    <div class="rent-page-h2">
+        <h2>
+            상호대차 현황
+        </h2>
+    </div>
+    <div class="rent-page-filter-bar" th:data-user-id="${userId}">
+        <label for="rent-status"></label>
+        <form method="get" th:action="@{/api/rent/{userId}(userId=${userId})}">
+            <select id="rent-status" name="status" onchange="this.form.submit()">
+                <option value="">선택</option>
+                <option value="ALL" th:selected="${status == 'ALL'}">전체</option>
+                <option value="RENTED" th:selected="${status == 'RENTED'}">대여중</option>
+                <option value="OVERDUE" th:selected="${status == 'OVERDUE'}">연체중</option>
+            </select>
+        </form>
+    </div>
+
+    <th:block th:each="rent : ${rents}">
+        <div class="rent-item">
+            <div class="book-cover"></div>
+            <div class="book-info">
+                <p>도서명 : [[${rent.book.title}]]</p>
+                <p>대여 기간 : [[${rent.rentDate}]] ~ [[${rent.returnDate}]]</p>
+                <p>대여 상태 :
+                    <span th:if="${#strings.equals(rent.status, 'RENTED')}">대여중</span>
+                    <span th:if="${#strings.equals(rent.status, 'OVERDUE')}">연체중</span>
+                </p>
+                <p>연장 여부 :
+                    <span th:if="${#strings.equals(rent.status, 'RENTED') and rent.renew == 0}">가능</span>
+                    <span th:unless="${#strings.equals(rent.status, 'RENTED') and rent.renew == 0}">불가능</span>
+                </p>
+            </div>
+            <button th:if="${#strings.equals(rent.status, 'RENTED') and rent.renew == 0}"
+                    class="extend-btn" th:data-rent-id="${rent.rentId}">연장 신청</button>
+        </div>
+    </th:block>
+</div>
+
+</body>
+</html>

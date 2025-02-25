@@ -50,7 +50,6 @@ public class SecurityConfig {
                         .requestMatchers("/user/find-id/**").permitAll()
                         .requestMatchers("/", "/home", "/user/register", "/user/login").permitAll()
                         .requestMatchers("/oauth2/**").permitAll()
-                        .requestMatchers("/user/send-verification-code").permitAll()
                         .requestMatchers("/user/manage").permitAll() //.hasRole("ADMIN") 테스트
                         .anyRequest().authenticated() // 나머지 요청은 인증 필요
                 )

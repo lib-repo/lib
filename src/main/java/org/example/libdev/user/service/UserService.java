@@ -49,7 +49,7 @@ public class UserService {
         return "회원가입 성공!";
     }
 
-   /* public String login(UserLoginDto requestDto) {
+    public String login(UserLoginDto requestDto) {
         User user = userRepository.findByUserId(requestDto.getUserId())
                 .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
 
@@ -58,23 +58,7 @@ public class UserService {
         }
 
         return jwtUtil.generateToken(user.getUserId());
-    }*/
-   public String login(UserLoginDto requestDto) {
-       Optional<User> optionalUser = userRepository.findByUserId(requestDto.getUserId());
-
-       if(optionalUser.isEmpty()) {
-           System.out.println("존재하지 않는 사용자: " + requestDto.getUserId());
-           throw new RuntimeException("사용자를 찾을 수 없습니다.");
-       }
-
-       User user = optionalUser.get();
-       if (!passwordEncoder.matches(requestDto.getPassword(), user.getPassword())) {
-           System.out.println("비밀번호 불일치");
-           throw new RuntimeException("비밀번호가 일치하지 않습니다.");
-       }
-
-       return jwtUtil.generateToken(user.getUserId());
-   }
+    }
 
     public String findUserIdByNameAndEmail(String userName, String email) {
         User user = userRepository.findByUserNameAndEmail(userName, email)
