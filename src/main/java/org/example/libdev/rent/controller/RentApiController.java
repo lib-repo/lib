@@ -18,10 +18,10 @@ public class RentApiController {
     /**
      * rent 생성
      */
-    @PostMapping("/{userId}/{bookId}")
-    public ResponseEntity<String> createRent(@PathVariable Long userId, @PathVariable Long bookId) {
+    @PostMapping("/{userId}/{bookId}/{libraryId}")
+    public ResponseEntity<String> createRent(@PathVariable Long userId, @PathVariable Long bookId, @PathVariable Long libraryId) {
         try{
-            rentService.saveRent(userId, bookId);
+            rentService.saveRent(userId, bookId,libraryId);
             return ResponseEntity.ok().build();
         }catch (IllegalStateException e){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());

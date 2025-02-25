@@ -4,8 +4,11 @@ import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.example.libdev.availabiliy.entity.Availability;
+import org.example.libdev.availabiliy.repository.AvailabilityRepository;
 import org.example.libdev.book.entity.Book;
 import org.example.libdev.book.repository.BookRepository;
+import org.example.libdev.book.service.BookService;
 import org.example.libdev.rent.dto.ResponseAdminRentDto;
 import org.example.libdev.rent.dto.ResponseHistoryRentDto;
 import org.example.libdev.rent.dto.ResponseRentDto;
@@ -39,41 +42,45 @@ public class RentService {
     private final BookRepository bookRepository;
     private final UserRepository userRepository;
     private final JavaMailSender javaMailSender;
+    private final AvailabilityRepository availabilityRepository;
+    private final BookService bookService;
 
     /**
      * rent 생성
      */
     @Transactional
-    public void saveRent(Long userId, Long bookId){
-
+    public void saveRent(Long userId, Long bookId, Long libraryId) {
         Book book = bookRepository.findById(bookId).orElseThrow(
-                ()->new IllegalStateException("책을 찾을 수 없습니다.")
+                () -> new IllegalStateException("책을 찾을 수 없습니다.")
         );
-
-//        if (!book.getAvailable()) {
-//            throw new IllegalStateException("책이 대출 가능한 상태가 아닙니다.");
-//        }
 
         User user = userRepository.findById(userId).orElseThrow(
-                ()->new IllegalStateException("사용자를 찾을 수 없습니다.")
+                () -> new IllegalStateException("사용자를 찾을 수 없습니다.")
         );
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        List<Availability> availabilities = book.getBookAvailabilities();
 
-        LocalDateTime nowDateTime = LocalDateTime.now();
-        String formattedDate = formatter.format(nowDateTime);
-        String returnFormattedDate = formatter.format(nowDateTime.plusWeeks(2));
+        Availability availability = availabilities.stream()
+                .filter(a -> a.getLibrary().getLibraryId().equals(libraryId) && a.isAvailable())
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException("이 도서관에서는 현재 대출이 불가능합니다."));
+
+        LocalDate rentDate = LocalDate.now();
+        LocalDate returnDate = rentDate.plusWeeks(2);
 
         Rent rent = Rent.builder()
-                .rentDate(formattedDate)
+                .rentDate(rentDate.toString())
                 .status(RentStatus.RENTED)
-                .returnDate(returnFormattedDate)
+                .returnDate(returnDate.toString())
                 .book(book)
                 .user(user)
                 .renew(0)
                 .build();
 
         rentRepository.save(rent);
+
+        availability.setAvailable(false);
+        availabilityRepository.save(availability);
     }
 
     /**

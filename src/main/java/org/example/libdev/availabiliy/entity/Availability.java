@@ -31,4 +31,12 @@ public class Availability extends BaseEntity {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "library_id")
     private Library library;
+
+    public void markAsUnavailable() {
+        this.available = false;
+    }
+
+    public void markAsAvailable() {
+        this.available = true;
+    }
 }
