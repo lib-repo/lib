@@ -1,0 +1,19 @@
+<!--begin::nav-->
+<nav th:fragment="adminNav" class="nav-backgroundcolor">
+  <div class="container-fluid">
+    <ul class="navbar-nav">
+      <li class="nav-item toggel-item">
+        <a class="nav-link" id="sidebarToggle" href="#" role="button">
+          <i class="bi bi-list"></i>
+        </a>
+      </li>
+      <div class="admin-main">
+        <a th:onclick="|location.href='@{/adminMain}'|" class="brand-link">Home</a>
+      </div>
+      <div class="logout-button">
+        <a href="">Logout</a>
+      </div>
+    </ul>
+  </div>
+</nav>
+

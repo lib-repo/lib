@@ -1,0 +1,49 @@
+main {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    width: 840px;
+    margin-left: 500px;
+    /* background-color: #f4f4f4; */
+}
+
+.container {
+    margin-top: -40px;
+    width: 500px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 50px;
+    padding: 20px;
+    border-radius: 10px;
+    /* box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); */
+    transform: scale(2); /* 크기 확대 */
+}
+.box {
+    width: 150px;
+    height: 150px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    background-color: #dee2e6;
+    font-size: 16px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+
+.box:hover {
+    background-color: #adb5bd;
+}
+
+.various-icons {
+    width: 50px;
+    height: 50px;
+    margin-bottom: 10px;
+}

@@ -1,7 +1,5 @@
 package org.example.libdev.user.controller;
 
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletResponse;
 import org.example.libdev.user.dto.UserRequestDto;
 import org.example.libdev.user.dto.UserLoginDto;
 import org.example.libdev.user.entity.User;
@@ -40,16 +38,10 @@ public class UserController {
 
     // 로그인
     @PostMapping("/login")
-    public String login(@ModelAttribute UserLoginDto requestDto, HttpServletResponse response) {
+    public String login(@ModelAttribute UserLoginDto requestDto, Model model) {
         String token = userService.login(requestDto);
-
-        Cookie jwtCookie = new Cookie("jwtToken", token);
-        jwtCookie.setHttpOnly(true);
-        jwtCookie.setPath("/");
-        jwtCookie.setMaxAge(60 * 60);
-        response.addCookie(jwtCookie);
-
-        return "redirect:/";
+        model.addAttribute("token", token);
+        return "home";
     }
 
     @GetMapping("/find-id")
@@ -70,7 +62,7 @@ public class UserController {
         return "User/find-password";
     }
 
-    // 인증번호 이메일 전송 
+    // 인증번호 이메일 전송
     @PostMapping("/find-password/send-code")
     public String sendVerificationCode(
             @RequestParam String userId,
@@ -105,4 +97,3 @@ public class UserController {
         return "userManage";
     }
 }
-

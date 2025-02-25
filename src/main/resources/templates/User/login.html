@@ -10,19 +10,23 @@
 <div class="container">
   <h2>로그인</h2>
   <hr>
-  <form id="login-form" method="post" action="/user/login">
-    <input type="text" id="userId" name="userId" required>
-    <input type="password" id="password" name="password" required>
-    <button type="submit">로그인</button>
+  <form id="login-form">
+    <label for="userId">아이디</label>
+    <input type="text" id="userId" name="userId" placeholder="아이디를 입력하세요" required>
 
+    <label for="password">비밀번호</label>
+    <input type="password" id="password" name="password" placeholder="비밀번호를 입력하세요" required>
+
+    <button type="submit">로그인</button>
 
 
     <p><a href="/oauth2/authorization/kakao">카카오 로그인</a></p>
     <p><a href="/oauth2/authorization/naver">네이버 로그인</a></p>
+  </form>
+
 
   <p><a href="/user/find-id">아이디 찾기</a> | <a href="/user/find-password">비밀번호 찾기</a></p>
   <p><a href="/user/register">회원가입</a></p>
-  </form>
 </div>
 
 <script src="/js/user/login.js"></script>

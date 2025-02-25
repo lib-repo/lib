@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Thymeleaf Fragment Example</title>
+    <!--    <link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap.min.css}">-->
+    <link rel="stylesheet" type="text/css" th:href="@{/css/subject.css}">
+    <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+            integrity="sha256-9kPW/n5nn53j4WMRYAxe9c1rCY96Oogo/MKSVdKzPmI="
+            crossorigin="anonymous"
+    />
+    <link rel="stylesheet" type="text/css" th:href="@{/css/adminlte.css}">
+    <script type="text/javascript" th:src="@{/js/adminSidebar.js}"></script>
+    <title>책 주제 관리</title>
+</head>
+<body>
+<!-- Nav Fragment 호출 -->
+<!--<div th:replace="~{fragments/nav :: nav}"></div>-->
+<div class="app-wrapper">
+    <div th:replace="~{fragments/adminNav :: adminNav}"></div>
+    <div th:replace="~{fragments/adminSide :: adminSide}"></div>
+    <main>
+        <div class="container">
+            <div class="title">책 주제
+                <button class="create" onclick="addSubject()">추가</button>
+            </div>
+            <table>
+                <thead>
+                <tr>
+                    <th>이름</th>
+                    <th>기능</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="subject : ${subjects}">
+                    <td class="subject_detail" th:text="${subject.name}"></td>
+                    <td>
+                        <button class="edit" th:onclick="|makeEditable(this, '${subject.id}')|">
+                            <img src="/icon/modify.png" class="modify"></img>
+                        </button>
+                        <img src="/icon/delete.png" class="delete" th:onclick="|deleteSubject(${subject.id})|"></img>
+
+                    </td>
+                </tr>
+                </tbody>
+
+            </table>
+        </div>
+    </main>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script type="text/javascript" th:src="@{/js/subject/adminSubject.js}"></script>
+</body>
+</html>
