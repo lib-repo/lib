@@ -10,7 +10,7 @@
   <link rel="stylesheet" href="/css/table.css">
   <link rel="stylesheet" href="/css/bookDetail.css">
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-
+  <script src="/js/detailPage.js"></script>
   <style>
 
     body{
@@ -62,7 +62,7 @@
           <td th:text="${lib.getLibrary().libraryLocation}"></td>
           <td th:text="${lib.getLibrary().libraryPhone}"></td>
           <td>
-            <a class="btn-flat">신청하기</a>
+            <a class="btn-flat" th:attr="data-library-id=${lib.getLibrary().id}" onclick="requestRent(this)">신청하기</a>
           </td>
         </tr>
         </tbody>
