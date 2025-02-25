@@ -27,12 +27,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -80,6 +77,7 @@ public class RentService {
         rentRepository.save(rent);
 
         availability.setAvailable(false);
+        availability.setUpdateDate();
         availabilityRepository.save(availability);
     }
 
@@ -123,7 +121,6 @@ public class RentService {
                 .toList();
     }
 
-
     /**
      * 대여 연장
      */
@@ -166,19 +163,26 @@ public class RentService {
      */
 
     @Transactional
-    public void returnRent(Long rentId){
-
+    public void returnRent(Long rentId) {
         Rent returnRent = rentRepository.findById(rentId).orElseThrow(
                 () -> new IllegalArgumentException("Rent 내역을 찾을 수 없습니다.")
         );
 
-        Book availableBook = returnRent.getBook();
+        Book returnedBook = returnRent.getBook();
+        Long rentedLibraryId = returnRent.getLibraryId();
 
-//        availableBook.updateAvailable(true);
+        Availability targetAvailability = returnedBook.getBookAvailabilities().stream()
+                .filter(av -> av.getLibrary().getLibraryId().equals(rentedLibraryId))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("해당 도서관의 Availability 정보를 찾을 수 없습니다."));
+
+        targetAvailability.setAvailable(true);
+        targetAvailability.setUpdateDate();
+
         LocalDate returnDate = LocalDate.now();
         returnRent.updateReturnStatusAndDate(RentStatus.RETURNED, returnDate.toString());
 
-        bookRepository.save(availableBook);
+        bookRepository.save(returnedBook);
         rentRepository.save(returnRent);
     }
 

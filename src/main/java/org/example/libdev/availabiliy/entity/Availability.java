@@ -39,4 +39,8 @@ public class Availability extends BaseEntity {
     public void markAsAvailable() {
         this.available = true;
     }
+
+    public void setUpdateDate(){
+        this.setUpdateDate();
+    }
 }
