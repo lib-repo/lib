@@ -55,7 +55,6 @@ public class OauthUserService extends DefaultOAuth2UserService {
                 throw new RuntimeException("지원하지 않는 OAuth 제공자입니다.");
         }
 
-        log.info("OAuth2 attributes: {}", attributes);
 
         Optional<User> existingUser = userRepository.findByUserId(userId);
         User user;
