@@ -2,6 +2,7 @@ package org.example.libdev.book.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.example.libdev.availability.dto.AvailabilityDTO;
 import org.example.libdev.availability.entity.Availability;
 import org.example.libdev.availability.repository.AvailabilityRepository;
 import org.example.libdev.book.dto.BookRequestDTO;
@@ -12,9 +13,13 @@ import org.example.libdev.library.entity.Library;
 import org.example.libdev.library.repository.LibraryRepository;
 import org.example.libdev.subject.entity.Subject;
 import org.example.libdev.subject.repository.SubjectRepository;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,12 +27,11 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -36,18 +40,16 @@ public class BookService {
 
     private final LibraryRepository libraryRepository;
     private final SubjectRepository subjectRepository;
-    private final RedisTemplate<String, Availability> redisTemplate;
-
-    @Value("${openapi.key}")
-    private String apiKey;
-
-    private final RestTemplate restTemplate;
-
     private final BookRepository bookRepository;
     private final AvailabilityRepository availabilityRepository;
 
+    private final RestTemplate restTemplate;
+    private final RedisTemplate<String, AvailabilityDTO> redisTemplate;
+
     private final ExecutorService executorService = Executors.newFixedThreadPool(20);
 
+    @Value("${openapi.key}")
+    private String apiKey;
 
     // 전체 도서 조회
     public List<BookResponseDTO> getAllBooks() {
@@ -57,6 +59,12 @@ public class BookService {
             log.error("도서 목록을 조회하는 중 오류 발생: {}", e.getMessage());
             throw new RuntimeException("도서 목록을 조회하는 중 오류가 발생했습니다.");
         }
+    }
+
+    // 전체 도서 목록 (페이지네이션)
+    public Page<BookResponseDTO> getBooks(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return bookRepository.findAll(pageable).map(Book::toResponseDTO);
     }
 
     // 상세 도서 조회
@@ -181,16 +189,15 @@ public class BookService {
     // 도서 대여 가능 여부 확인
     public List<Availability> checkAvailability(Long bookId) {
         List<Availability> availableLibraries = getAvailabilityFromCache(bookId);
-        log.info("availableLibraries: {}", availableLibraries);
+
+        if (!availableLibraries.isEmpty()) {
+            return availableLibraries;
+        }
 
         Book book = bookRepository.findById(bookId)
                 .orElseThrow(() -> new NoSuchElementException("해당 ID의 도서를 찾을 수 없습니다." + bookId));
 
         List<Availability> availabilityList = availabilityRepository.findByBook(book);
-
-//        if (availableLibraries != null && !availableLibraries.isEmpty()) {
-//            return availabilityList;
-//        }
 
         if (availabilityList.isEmpty()) {
             List<Library> libraries = libraryRepository.findAll();
@@ -249,12 +256,8 @@ public class BookService {
 
                 availabilityRepository.save(availability);
 
-                String cacheKey = "availability:" + book.getBookId();
-                redisTemplate.opsForList().remove(cacheKey, 0, availability);
-                redisTemplate.opsForList().rightPush(cacheKey, availability);
-
             } catch (JSONException e) {
-                log.error("JSON 파싱 중 오류 발생: {}",e.getMessage());
+                log.error("JSON 파싱 중 오류 발생: {}", e.getMessage());
                 throw new RuntimeException("JSON 파싱 중 오류가 발생했습니다.");
             } catch (Exception e) {
                 log.error("예외 발생: {}", e.getMessage());
@@ -270,13 +273,39 @@ public class BookService {
     // Redis 캐시 조회
     public List<Availability> getAvailabilityFromCache(Long bookId) {
         String cacheKey = "availability:" + bookId;
-        return redisTemplate.opsForList().range(cacheKey, 0, -1);
+        List<AvailabilityDTO> availabilityDTOList = redisTemplate.opsForList().range(cacheKey, 0, -1);
+
+        if (availabilityDTOList.isEmpty() || availabilityDTOList == null) {
+            return Collections.emptyList();
+        }
+
+        List<Availability> availabilityList = new ArrayList<>();
+
+        for (AvailabilityDTO availabilityDTO : availabilityDTOList) {
+            Availability availability = new Availability();
+            availability.setBook(bookRepository.findById(availabilityDTO.getBookId()).orElse(null));
+            availability.setLibrary(libraryRepository.findById(availabilityDTO.getLibraryId()).orElse(null));
+            availability.setAvailable(availabilityDTO.isAvailable());
+            availability.setAvailabilityId(availabilityDTO.getAvailabilityId());
+            availabilityList.add(availability);
+        }
+
+        return availabilityList;
     }
 
     // 캐시 저장
     public void saveAvailabilityToCache(Long bookId, List<Availability> availabilityList) {
         String cacheKey = "availability:" + bookId;
-        redisTemplate.opsForList().rightPushAll(cacheKey, availabilityList);
+
+        for (Availability availability : availabilityList) {
+            AvailabilityDTO availabilityDTO = new AvailabilityDTO();
+            availabilityDTO.setBookId(availability.getBook().getBookId());
+            availabilityDTO.setLibraryId(availability.getLibrary().getLibraryId());
+            availabilityDTO.setAvailable(availability.isAvailable());
+            availabilityDTO.setAvailabilityId(availability.getAvailabilityId());
+
+            redisTemplate.opsForList().rightPush(cacheKey, availabilityDTO);
+        }
     }
 
     // 캐시 초기화

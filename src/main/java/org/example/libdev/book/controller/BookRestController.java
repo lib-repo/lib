@@ -6,6 +6,7 @@ import org.example.libdev.book.dto.BookRequestDTO;
 import org.example.libdev.book.dto.BookResponseDTO;
 import org.example.libdev.book.service.BookService;
 import org.json.JSONException;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,12 +23,11 @@ public class BookRestController {
     private final BookService bookService;
 
     @GetMapping
-    public ResponseEntity<List<BookResponseDTO>> getAllBooks() {
+    public ResponseEntity<Page<BookResponseDTO>> getAllBooks(@RequestParam int page, @RequestParam int size) {
         try {
-            return ResponseEntity.ok(bookService.getAllBooks());
+            return ResponseEntity.ok(bookService.getBooks(page, size));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Collections.emptyList());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 

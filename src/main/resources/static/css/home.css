@@ -1,11 +1,16 @@
 body {
-    width: 1200px;
+    width: 100%;
     margin: 0 auto;
     padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding-top: 180px;
 }
 
 .row {
-    display: flex;
+    display: block;
     flex-wrap: wrap;
     justify-content: space-around;
     margin: 0 auto;

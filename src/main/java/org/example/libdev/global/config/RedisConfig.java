@@ -1,8 +1,6 @@
 package org.example.libdev.global.config;
 
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import org.example.libdev.availability.dto.AvailabilityDTO;
 import org.example.libdev.availability.entity.Availability;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -24,20 +22,22 @@ public class RedisConfig {
 
     @Bean
     public RedisConnectionFactory redisConnectionFactory() {
+        if (host == null || host.isEmpty()) {
+            throw new IllegalArgumentException("호스트는 'null' 이거나 비어 있을 수 없습니다.");
+        }
+        if (port <= 0) {
+            throw new IllegalArgumentException("포트는 0 보다 커야 합니다.");
+        }
+
         return new LettuceConnectionFactory(host, port);
     }
 
     @Bean
-    public RedisTemplate<String, Availability> redisTemplate() {
-        RedisTemplate<String, Availability> redisTemplate = new RedisTemplate<>();
+    public RedisTemplate<String, AvailabilityDTO> redisTemplate() {
+        RedisTemplate<String, AvailabilityDTO> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(redisConnectionFactory());
 
-        Jackson2JsonRedisSerializer<Availability> serializer = new Jackson2JsonRedisSerializer<>(Availability.class);
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.registerModule(new JavaTimeModule());
-        objectMapper.findAndRegisterModules();
-        serializer.setObjectMapper(objectMapper);
+        Jackson2JsonRedisSerializer<AvailabilityDTO> serializer = new Jackson2JsonRedisSerializer<>(AvailabilityDTO.class);
 
         redisTemplate.setValueSerializer(serializer);
         redisTemplate.setHashValueSerializer(serializer);
