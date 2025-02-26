@@ -22,9 +22,9 @@
 </head>
 <body>
 <div th:replace="~{fragments/userHeader}"></div>
-<div th:replace="~{fragments/categorybar}"></div>
+<div th:replace="~{fragments/categorybar (subjects=${subjects})}"></div>
 
-<div>
+<div class="main-content">
     <div>
         <h4 class="justify-start" th:text="${book.title}"></h4>
         <h6 class="justify-start" th:text="${book.author}"></h6>
@@ -61,7 +61,7 @@
                 <td th:text="${lib.getLibrary().libraryLocation}"></td>
                 <td th:text="${lib.getLibrary().libraryPhone}"></td>
                 <td>
-            <a class="btn-flat" th:attr="data-library-id=${lib.getLibrary().id}" onclick="requestRent(this)">신청하기</a>
+            <a class="btn-flat" th:attr="data-library-id=${lib.getLibrary().libraryId}" onclick="requestRent(this)">신청하기</a>
                 </td>
             </tr>
             </tbody>

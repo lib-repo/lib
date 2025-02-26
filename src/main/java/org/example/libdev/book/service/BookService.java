@@ -67,6 +67,16 @@ public class BookService {
         return bookRepository.findAll(pageable).map(Book::toResponseDTO);
     }
 
+    // 주제별 도서 목록
+    public List<BookResponseDTO> getBooksBySubject(Long subjectId) {
+        return bookRepository.findBySubjectId(subjectId).stream().map(Book::toResponseDTO).toList();
+    }
+
+    // 키워드 검색 도서 목록
+    public List<BookResponseDTO> searchBooksByTitle(String keyword) {
+        return bookRepository.findByTitleContainingIgnoreCase(keyword).stream().map(Book::toResponseDTO).toList();
+    }
+
     // 상세 도서 조회
     public BookResponseDTO getBookById(Long bookId) {
         try {

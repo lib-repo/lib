@@ -105,7 +105,7 @@
     <a href="/" class="user-sidebar-header-logo">📚 BookRent</a>
     <div class="user-sidebar-search-box">
         <i class="material-icons search-icon">search</i>
-        <input type="text" class="user-sidebar-search-input" placeholder="책 검색...">
+        <input type="text" id="book-search-input" class="user-sidebar-search-input" placeholder="책 검색..." th:value="${keyword != null ? keyword : ''}">
     </div>
     <div class="user-sidebar-nav-links">
         <a href="#">로그인</a>
@@ -113,5 +113,7 @@
         <a href="#">마이페이지</a>
     </div>
 </nav>
+
+<script type="module" src="/js/search.js"></script>
 </body>
 </html>

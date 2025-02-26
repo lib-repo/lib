@@ -86,62 +86,62 @@
 <body>
 <header class="category-menu">
   <ul>
-    <li>
-      <a href="#">총류</a>
-      <ul>
-        <li><a href="#">도서관학</a></li>
-        <li><a href="#">출판</a></li>
-        <li><a href="#">정보학</a></li>
-      </ul>
+    <li th:each="subject : ${subjects}">
+      <a th:text="${subject.name}" th:href="@{/books/subject/{subjectId}(subjectId=${subject.id})}"></a>
+<!--      <ul>-->
+<!--        <li><a href="#">도서관학</a></li>-->
+<!--        <li><a href="#">출판</a></li>-->
+<!--        <li><a href="#">정보학</a></li>-->
+<!--      </ul>-->
     </li>
-    <li>
-      <a href="#">철학</a>
-      <ul>
-        <li><a href="#">서양철학</a></li>
-        <li><a href="#">동양철학</a></li>
-        <li><a href="#">논리학</a></li>
-      </ul>
-    </li>
-    <li>
-      <a href="#">종교</a>
-      <ul>
-        <li><a href="#">기독교</a></li>
-        <li><a href="#">불교</a></li>
-        <li><a href="#">이슬람교</a></li>
-      </ul>
-    </li>
-    <li>
-      <a href="#">사회과학</a>
-      <ul>
-        <li><a href="#">정치</a></li>
-        <li><a href="#">사회학</a></li>
-        <li><a href="#">심리학</a></li>
-      </ul>
-    </li>
-    <li>
-      <a href="#">자연과학</a>
-      <ul>
-        <li><a href="#">수학</a></li>
-        <li><a href="#">물리학</a></li>
-        <li><a href="#">생물학</a></li>
-      </ul>
-    </li>
-    <li>
-      <a href="#">문학</a>
-      <ul>
-        <li><a href="#">소설</a></li>
-        <li><a href="#">시</a></li>
-        <li><a href="#">수필</a></li>
-      </ul>
-    </li>
-    <li>
-      <a href="#">역사</a>
-      <ul>
-        <li><a href="#">한국사</a></li>
-        <li><a href="#">세계사</a></li>
-        <li><a href="#">고고학</a></li>
-      </ul>
-    </li>
+<!--    <li>-->
+<!--      <a th:href="@{/books/subject/2}">철학</a>-->
+<!--      <ul>-->
+<!--        <li><a href="#">서양철학</a></li>-->
+<!--        <li><a href="#">동양철학</a></li>-->
+<!--        <li><a href="#">논리학</a></li>-->
+<!--      </ul>-->
+<!--    </li>-->
+<!--    <li>-->
+<!--      <a href="#">종교</a>-->
+<!--      <ul>-->
+<!--        <li><a href="#">기독교</a></li>-->
+<!--        <li><a href="#">불교</a></li>-->
+<!--        <li><a href="#">이슬람교</a></li>-->
+<!--      </ul>-->
+<!--    </li>-->
+<!--    <li>-->
+<!--      <a href="#">사회과학</a>-->
+<!--      <ul>-->
+<!--        <li><a href="#">정치</a></li>-->
+<!--        <li><a href="#">사회학</a></li>-->
+<!--        <li><a href="#">심리학</a></li>-->
+<!--      </ul>-->
+<!--    </li>-->
+<!--    <li>-->
+<!--      <a href="#">자연과학</a>-->
+<!--      <ul>-->
+<!--        <li><a href="#">수학</a></li>-->
+<!--        <li><a href="#">물리학</a></li>-->
+<!--        <li><a href="#">생물학</a></li>-->
+<!--      </ul>-->
+<!--    </li>-->
+<!--    <li>-->
+<!--      <a href="#">문학</a>-->
+<!--      <ul>-->
+<!--        <li><a href="#">소설</a></li>-->
+<!--        <li><a href="#">시</a></li>-->
+<!--        <li><a href="#">수필</a></li>-->
+<!--      </ul>-->
+<!--    </li>-->
+<!--    <li>-->
+<!--      <a href="#">역사</a>-->
+<!--      <ul>-->
+<!--        <li><a href="#">한국사</a></li>-->
+<!--        <li><a href="#">세계사</a></li>-->
+<!--        <li><a href="#">고고학</a></li>-->
+<!--      </ul>-->
+<!--    </li>-->
   </ul>
 </header>
 </body>

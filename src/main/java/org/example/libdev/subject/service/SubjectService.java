@@ -29,6 +29,12 @@ public class SubjectService {
         return subject.toDto();
     }
 
+    public SubjectDto findById(Long subjectId) {
+        Subject subject = subjectRepository.findById(subjectId)
+                .orElseThrow(() -> new NoSuchElementException("해당 ID에 해당하는 주제가 존재하지 않습니다. : " + subjectId));
+        return subject.toDto();
+    }
+
     public SubjectDto save(String name) {
         // 이스케이프 처리
         String escapedName = StringEscapeUtils.escapeHtml4(name);
