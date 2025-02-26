@@ -136,12 +136,19 @@ function createPagination(totalPages) {
     prevItem.appendChild(prevLink);
     pagination.appendChild(prevItem);
 
+    // 페이지 번호 생성 10개씩
+    const maxPageGroup = Math.ceil(totalPages / 10);
+    const currentGroup = Math.ceil(currentPage / 10);
+
+    const startPage = (currentGroup - 1) * 10 + 1;
+    const endPage = Math.min(currentGroup * 10, totalPages);
+
     // 페이지 번호 생성
-    for (let i = 1; i <= totalPages; i++) {
+    for (let i = startPage; i <= endPage; i++) {
         const pageItem = document.createElement('li');
         pageItem.classList.add('page-item');
         if (currentPage === i) {
-            pageItem.classList.add('active'); // 현재 페이지는 active 상태
+            pageItem.classList.add('active');
         }
         const pageLink = document.createElement('a');
         pageLink.classList.add('page-link');

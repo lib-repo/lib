@@ -21,7 +21,13 @@
 </head>
 <body>
 <div th:replace="~{fragments/userHeader}"></div>
-<div th:replace="~{fragments/categorybar}"></div>
+<div th:replace="~{fragments/categorybar (subjects=${subjects})}"></div>
+
+  <div class="row">
+    <h4 th:if="${currentSubject != null}"><span th:text="${currentSubject.name}"></span>의 도서 목록</h4>
+    <h4 th:if="${keyword != null and keyword != ''}"><span th:text="${keyword}"></span>의 검색 결과</h4>
+  </div>
+
   <div class="row">
     <div class="col s12 m6 l3" th:each="book : ${books}">
       <div class="card">

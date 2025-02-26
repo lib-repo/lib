@@ -1,21 +1,25 @@
 body {
-    width: 100%;
     margin: 0 auto;
     padding: 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-start;
+    justify-content: center;
     padding-top: 180px;
+}
 
+.main-content {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
 .container {
     display: flex;
     flex-direction: row;
     align-items: flex-start;
-    justify-content: center;
-    margin: 0;
+    justify-content: flex-start;
+    margin: 0 auto;
     gap: 50px;
     width: 100%;
     max-width: 1200px;
@@ -25,6 +29,7 @@ body {
     width: 300px;
     height: 400px;
     object-fit: cover;
+    margin-right: 20px;
 }
 
 .book-info {
@@ -43,8 +48,10 @@ body {
 
 .divider {
     margin: 50px 0;
+    width: 100%;
 }
 
 table {
     width: 100%;
+    table-layout: fixed;
 }

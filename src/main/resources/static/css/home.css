@@ -62,3 +62,7 @@ body {
 .card a:hover {
     text-decoration: underline;
 }
+
+span {
+    margin: 8px;
+}

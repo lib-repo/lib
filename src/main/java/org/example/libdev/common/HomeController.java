@@ -18,6 +18,7 @@ public class HomeController {
     public String home(Model model) {
         try {
             model.addAttribute("books", bookService.getAllBooks());
+            model.addAttribute("subjects", subjectService.findAll());
 
             return "home";
         } catch (Exception e) {
