@@ -10,41 +10,46 @@
 <div class="container">
     <h2>아이디 찾기</h2>
     <hr>
-    <form id="find-id-form" action="/user/find-id" method="post">
-        <label for="name">이름</label>
-        <input type="text" id="name" name="userName" placeholder="이름을 입력하세요" required>
+    <form id="find-id-form" method="post" action="/user/find-id">
+        <div class="input-group">
+            <label for="userName">이름</label>
+            <input type="text" id="userName" name="userName" placeholder="이름을 입력하세요" required>
+        </div>
 
-        <label for="email">이메일</label>
-        <div class="email-group">
-            <input type="text" id="email" name="emailLocalPart" placeholder="이메일" required>
-            <span>@</span>
-            <select id="email-domain" name="emailDomain">
-                <option value="">선택해주세요</option>
-                <option value="naver.com">naver.com</option>
-                <option value="gmail.com">gmail.com</option>
-                <option value="daum.net">daum.net</option>
-                <option value="kakao.com">kakao.com</option>
-                <option value="nate.com">nate.com</option>
-            </select>
+        <div class="input-group">
+            <label for="email">이메일</label>
+            <div class="email-group">
+                <input type="text" id="email" name="email" placeholder="이메일" required>
+                <span>@</span>
+                <select id="email-domain" name="email-domain">
+                    <option value="">선택해주세요</option>
+                    <option value="naver.com">naver.com</option>
+                    <option value="gmail.com">gmail.com</option>
+                    <option value="daum.net">daum.net</option>
+                    <option value="kakao.com">kakao.com</option>
+                    <option value="nate.com">nate.com</option>
+                </select>
+            </div>
         </div>
 
         <button type="submit">아이디 찾기</button>
     </form>
 
+    <!-- 메시지 출력 (성공 / 실패 메시지) -->
+    <p th:if="${message}" class="success-message">[[${message}]]</p>
 
-    <p th:if="${message}" style="color:green;">[[${message}]]</p>
-    <p th:if="${userId}" style="font-weight: bold;">
+    <!-- 아이디가 있을 경우 출력 -->
+    <p th:if="${userId}" class="found-id">
         회원님의 아이디: <span th:text="${userId}"></span>
     </p>
 
-
-    <p th:if="${userId}">
+    <!-- 비밀번호 찾기 바로가기 -->
+    <p th:if="${userId}" class="find-password-link">
         <a th:href="@{/user/find-password(userId=${userId})}">비밀번호 찾기</a>
     </p>
 
-    <p><a href="/user/login">로그인 페이지로 돌아가기</a></p>
+    <p><a href="/user/login" class="login-link">로그인 페이지로 돌아가기</a></p>
 </div>
-
 
 <script src="/js/user/find-id.js"></script>
 </body>
