@@ -1,27 +1,28 @@
 package org.example.libdev.rent.controller;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.example.libdev.rent.dto.RequestRentDto;
 import org.example.libdev.rent.service.RentService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/rent")
+@Slf4j
 public class RentApiController {
     private final RentService rentService;
 
     /**
      * rent 생성
      */
-    @PostMapping("/{userId}/{bookId}/{libraryId}")
-    public ResponseEntity<String> createRent(@PathVariable Long userId, @PathVariable Long bookId, @PathVariable Long libraryId) {
+    @PostMapping("/{bookId}")
+    public ResponseEntity<String> createRent(@PathVariable Long bookId, @RequestBody RequestRentDto rentRequest) {
         try{
-            rentService.saveRent(userId, bookId,libraryId);
+
+            rentService.saveRent(1L, bookId,rentRequest.getLibraryId());
             return ResponseEntity.ok().build();
         }catch (IllegalStateException e){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());

@@ -40,7 +40,4 @@ public class Availability {
         this.available = true;
     }
 
-    public void setUpdateDate(){
-        this.setUpdateDate();
-    }
 }

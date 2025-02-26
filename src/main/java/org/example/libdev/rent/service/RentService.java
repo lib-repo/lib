@@ -69,6 +69,7 @@ public class RentService {
                 .rentDate(rentDate.toString())
                 .status(RentStatus.RENTED)
                 .returnDate(returnDate.toString())
+                .libraryId(libraryId)
                 .book(book)
                 .user(user)
                 .renew(0)
@@ -77,7 +78,6 @@ public class RentService {
         rentRepository.save(rent);
 
         availability.setAvailable(false);
-        availability.setUpdateDate();
         availabilityRepository.save(availability);
     }
 
@@ -177,7 +177,7 @@ public class RentService {
                 .orElseThrow(() -> new IllegalArgumentException("해당 도서관의 Availability 정보를 찾을 수 없습니다."));
 
         targetAvailability.setAvailable(true);
-        targetAvailability.setUpdateDate();
+//        targetAvailability.setUpdateDate();
 
         LocalDate returnDate = LocalDate.now();
         returnRent.updateReturnStatusAndDate(RentStatus.RETURNED, returnDate.toString());

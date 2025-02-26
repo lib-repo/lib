@@ -1,26 +1,18 @@
 <!DOCTYPE html>
-<html lang="en">
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title></title>
+    <title>도서 상세 정보</title>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <link rel="stylesheet" href="/css/table.css">
     <link rel="stylesheet" href="/css/bookDetail.css">
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script src="/js/detailPage.js"></script>
-    <!-- <style> -->
-    <!--    body{-->
-    <!--      display: block !important;-->
-    <!--      min-width: 1519px;-->
-    <!--      padding-top: 200px;-->
-    <!--    }-->
-    <!--  </style>-->
-
+    <script defer src="/js/detailPage.js"></script>
 </head>
-<body>
+<body th:attr=" data-book-id=${book?.bookId}">
+
 <div th:replace="~{fragments/userHeader}"></div>
 <div th:replace="~{fragments/categorybar (subjects=${subjects})}"></div>
 
@@ -35,10 +27,10 @@
     <div class="container">
         <img class="book-image" th:src="${book.imageUrl}" th:alt="${book.title}">
         <div class="book-info">
-            <text>출판사 : <span th:text="${book.publisher}"></span></text>
-            <text>출판년도 : <span th:text="${book.publicationYear}"></span></text>
-            <text>ISBN : <span th:text="${book.isbn}"></span></text>
-            <text th:text="${book.description}"></text>
+            <p>출판사 : <span th:text="${book.publisher}"></span></p>
+            <p>출판년도 : <span th:text="${book.publicationYear}"></span></p>
+            <p>ISBN : <span th:text="${book.isbn}"></span></p>
+            <p th:text="${book.description}"></p>
         </div>
     </div>
 
@@ -61,8 +53,11 @@
                 <td th:text="${lib.getLibrary().libraryLocation}"></td>
                 <td th:text="${lib.getLibrary().libraryPhone}"></td>
                 <td>
-            <a class="btn-flat" th:attr="data-library-id=${lib.getLibrary().libraryId}" onclick="requestRent(this)">신청하기</a>
+                    <a class="btn-flat rent-btn"
+                       th:attr="data-library-id=${lib.getLibrary().libraryId}"
+                       onclick="requestLoan(this)">신청하기</a>
                 </td>
+
             </tr>
             </tbody>
         </table>
@@ -71,3 +66,4 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 </body>
+</html>
