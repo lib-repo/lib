@@ -1,15 +1,24 @@
 body {
-    width: 1200px;
+    width: 100%;
     margin: 0 auto;
     padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding-top: 180px;
+
 }
 
 .container {
     display: flex;
     flex-direction: row;
     align-items: flex-start;
+    justify-content: center;
     margin: 0;
     gap: 50px;
+    width: 100%;
+    max-width: 1200px;
 }
 
 .book-image {

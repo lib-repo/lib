@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>도서 관리</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/adminlte.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/book/bookManagement.css}">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+<div class="app-wrapper">
+    <div th:replace="~{fragments/adminNav :: adminNav}"></div>
+    <div th:replace="~{fragments/adminSide :: adminSide}"></div>
+
+    <div class="container">
+        <div class="register-header">
+            <h4>도서 관리</h4>
+            <button data-bs-toggle="modal" data-bs-target="#book-register-modal" class="btn btn-primary">
+                <i class="bi bi-plus"></i> 도서 등록
+            </button>
+        </div>
+        <div class="table-container">
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th>ISBN</th>
+                    <th>표지</th>
+                    <th>도서명</th>
+                    <th>저자</th>
+                    <th>출판사</th>
+                    <th>출판년도</th>
+                    <th></th>
+                </tr>
+                </thead>
+
+                <tbody id="book-list">
+                <tr th:each="book : ${books}">
+                    <td th:text="${book.isbn}"></td>
+                    <td><img th:src="${book.imageUrl}" alt="Book Image"></td>
+                    <td th:text="${book.title}"></td>
+                    <td th:text="${book.author}"></td>
+                    <td th:text="${book.publisher}"></td>
+                    <td th:text="${book.publicationYear}"></td>
+                    <td>
+                        <a class="edit-btn" th:attr="data-book-id=${book.bookId}" href="javascript:void(0)">
+                            <i class="bi bi-pencil"></i>
+                        </a>
+                        <a class="delete-btn" th:attr="data-book-id=${book.bookId}" href="javascript:void(0)">
+                            <i class="bi bi-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- 페이지 네이션 -->
+    <div id="pagination" class="d-flex justify-content-center mt-4">
+        <nav aria-label="Page navigation">
+            <ul class="pagination">
+            </ul>
+        </nav>
+    </div>
+</div>
+
+<!-- 도서 등록 모달 -->
+<div class="modal fade" id="book-register-modal" tabindex="-1" aria-labelledby="book-register-modalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="book-register-modalLabel">도서 등록</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="isbn-input" class="form-label">ISBN</label>
+                    <div class="input-group">
+                        <input id="isbn-input" type="text" class="form-control">
+                        <button id="searchButton" class="btn btn-outline-primary">검색</button>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="subject" class="form-label">주제</label>
+                    <select id="subject" class="form-select">
+                        <option value="" disabled selected>선택하세요</option>
+                        <option th:each="subject : ${subjects}" th:value="${subject.id}"
+                                th:text="${subject.name}"></option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="title" class="form-label">도서명</label>
+                    <input id="title" type="text" class="form-control">
+                </div>
+                <div class="mb-3">
+                    <label for="author" class="form-label">저자</label>
+                    <input id="author" type="text" class="form-control">
+                </div>
+                <div class="mb-3">
+                    <label for="publisher" class="form-label">출판사</label>
+                    <input id="publisher" type="text" class="form-control">
+                </div>
+                <div class="mb-3">
+                    <label for="publicationYear" class="form-label">출판년도</label>
+                    <input id="publicationYear" type="text" class="form-control">
+                </div>
+                <div class="mb-3">
+                    <label for="description" class="form-label">설명</label>
+                    <textarea id="description" class="form-control"></textarea>
+                </div>
+                <div class="mb-3">
+                    <label for="imageUrl" class="form-label">표지</label>
+                    <input id="imageUrl" type="text" class="form-control">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                <button id="registerButton" type="button" class="btn btn-primary">등록</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script th:inline="javascript">
+    var totalBooks = [[${totalBooks}]];
+    var totalPages = [[${totalPages}]];
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script type="text/javascript" th:src="@{/js/adminSidebar.js}"></script>
+<script type="module" src="/js/api.js"></script>
+<script type="module" src="/js/book.js"></script>
+</body>
+</html>

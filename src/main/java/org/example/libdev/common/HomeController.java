@@ -26,4 +26,9 @@ public class HomeController {
             return "error";
         }
     }
+
+    @GetMapping("/adminNav")
+    public String getAdminNav() {
+        return "fragments/adminNav";
+    }
 }

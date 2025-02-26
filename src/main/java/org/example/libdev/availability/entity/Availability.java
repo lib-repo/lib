@@ -15,7 +15,7 @@ import org.example.libdev.library.entity.Library;
 @Builder
 @Table(name = "book_libraries")
 @JsonIgnoreProperties({"book", "library"})
-public class Availability extends BaseEntity {
+public class Availability {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
