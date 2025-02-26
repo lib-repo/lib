@@ -4,8 +4,11 @@ import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.example.libdev.availabiliy.entity.Availability;
+import org.example.libdev.availabiliy.repository.AvailabilityRepository;
 import org.example.libdev.book.entity.Book;
 import org.example.libdev.book.repository.BookRepository;
+import org.example.libdev.book.service.BookService;
 import org.example.libdev.rent.dto.ResponseAdminRentDto;
 import org.example.libdev.rent.dto.ResponseHistoryRentDto;
 import org.example.libdev.rent.dto.ResponseRentDto;
@@ -24,12 +27,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -39,41 +39,46 @@ public class RentService {
     private final BookRepository bookRepository;
     private final UserRepository userRepository;
     private final JavaMailSender javaMailSender;
+    private final AvailabilityRepository availabilityRepository;
+    private final BookService bookService;
 
     /**
      * rent 생성
      */
     @Transactional
-    public void saveRent(Long userId, Long bookId){
-
+    public void saveRent(Long userId, Long bookId, Long libraryId) {
         Book book = bookRepository.findById(bookId).orElseThrow(
-                ()->new IllegalStateException("책을 찾을 수 없습니다.")
+                () -> new IllegalStateException("책을 찾을 수 없습니다.")
         );
-
-//        if (!book.getAvailable()) {
-//            throw new IllegalStateException("책이 대출 가능한 상태가 아닙니다.");
-//        }
 
         User user = userRepository.findById(userId).orElseThrow(
-                ()->new IllegalStateException("사용자를 찾을 수 없습니다.")
+                () -> new IllegalStateException("사용자를 찾을 수 없습니다.")
         );
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        List<Availability> availabilities = book.getBookAvailabilities();
 
-        LocalDateTime nowDateTime = LocalDateTime.now();
-        String formattedDate = formatter.format(nowDateTime);
-        String returnFormattedDate = formatter.format(nowDateTime.plusWeeks(2));
+        Availability availability = availabilities.stream()
+                .filter(a -> a.getLibrary().getLibraryId().equals(libraryId) && a.isAvailable())
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException("이 도서관에서는 현재 대출이 불가능합니다."));
+
+        LocalDate rentDate = LocalDate.now();
+        LocalDate returnDate = rentDate.plusWeeks(2);
 
         Rent rent = Rent.builder()
-                .rentDate(formattedDate)
+                .rentDate(rentDate.toString())
                 .status(RentStatus.RENTED)
-                .returnDate(returnFormattedDate)
+                .returnDate(returnDate.toString())
                 .book(book)
                 .user(user)
                 .renew(0)
                 .build();
 
         rentRepository.save(rent);
+
+        availability.setAvailable(false);
+        availability.setUpdateDate();
+        availabilityRepository.save(availability);
     }
 
     /**
@@ -115,7 +120,6 @@ public class RentService {
                 .map(ResponseHistoryRentDto::toDto)
                 .toList();
     }
-
 
     /**
      * 대여 연장
@@ -159,19 +163,26 @@ public class RentService {
      */
 
     @Transactional
-    public void returnRent(Long rentId){
-
+    public void returnRent(Long rentId) {
         Rent returnRent = rentRepository.findById(rentId).orElseThrow(
                 () -> new IllegalArgumentException("Rent 내역을 찾을 수 없습니다.")
         );
 
-        Book availableBook = returnRent.getBook();
+        Book returnedBook = returnRent.getBook();
+        Long rentedLibraryId = returnRent.getLibraryId();
 
-//        availableBook.updateAvailable(true);
+        Availability targetAvailability = returnedBook.getBookAvailabilities().stream()
+                .filter(av -> av.getLibrary().getLibraryId().equals(rentedLibraryId))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("해당 도서관의 Availability 정보를 찾을 수 없습니다."));
+
+        targetAvailability.setAvailable(true);
+        targetAvailability.setUpdateDate();
+
         LocalDate returnDate = LocalDate.now();
         returnRent.updateReturnStatusAndDate(RentStatus.RETURNED, returnDate.toString());
 
-        bookRepository.save(availableBook);
+        bookRepository.save(returnedBook);
         rentRepository.save(returnRent);
     }
 

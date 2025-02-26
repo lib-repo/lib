@@ -27,6 +27,9 @@ public class Rent {
     private RentStatus status;
 
     @Column(nullable = false)
+    private Long libraryId;
+
+    @Column(nullable = false)
     private String rentDate;
 
     @Column(nullable = false)
