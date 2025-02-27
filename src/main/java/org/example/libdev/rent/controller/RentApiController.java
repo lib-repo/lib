@@ -22,7 +22,7 @@ public class RentApiController {
     public ResponseEntity<String> createRent(@PathVariable Long bookId, @RequestBody RequestRentDto rentRequest) {
         try{
 
-            rentService.saveRent(1L, bookId,rentRequest.getLibraryId());
+            rentService.saveRent(1L, bookId,rentRequest.getLibraryId(), rentRequest.getAvailabilityId());
             return ResponseEntity.ok().build();
         }catch (IllegalStateException e){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
