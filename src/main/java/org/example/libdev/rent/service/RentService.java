@@ -45,7 +45,7 @@ public class RentService {
     /**
      * rent 생성
      */
-    @Transactional
+    @Transactional(timeout = 5)
     public void saveRent(Long userId, Long bookId, Long libraryId, Long availabilityId) {
         Book book = bookRepository.findById(bookId).orElseThrow(
                 () -> new IllegalStateException("책을 찾을 수 없습니다.")
@@ -55,14 +55,15 @@ public class RentService {
                 () -> new IllegalStateException("사용자를 찾을 수 없습니다.")
         );
 
-        Availability availability = availabilityService.getAvailability(availabilityId);
+        Availability availability = availabilityRepository.findById(availabilityId)
+                .orElseThrow(() -> new IllegalStateException("대출 가능 정보를 찾을 수 없습니다."));
 
         if(!availability.isAvailable()){
             throw new IllegalStateException("이미 대출되었습니다.");
-        }else{
-            availability.setAvailable(false);
-            availabilityRepository.save(availability);
         }
+
+        availability.setAvailable(false);
+        availabilityRepository.save(availability);
 
 
         LocalDate rentDate = LocalDate.now();
@@ -109,11 +110,13 @@ public class RentService {
      *  대여 내역 조회
      */
     @Transactional(readOnly = true)
-    public List<ResponseHistoryRentDto> historyRentByUser(Long userId){
+    public List<ResponseHistoryRentDto> historyRentByUser(Long userIdx){
 
-        List<Rent> historyRents = rentRepository.findByUser_UserIdxAndStatus(userId,RentStatus.RETURNED).orElseThrow(
+        List<Rent> historyRents = rentRepository.findByUser_UserIdxAndStatus(userIdx,RentStatus.RETURNED).orElseThrow(
                 () -> new IllegalStateException("대여 내역을 찾을 수 없습니다.")
         );
+
+        log.info("history:{}",historyRents.toString());
 
         return historyRents.stream()
                 .sorted(Comparator.comparing(Rent::getRentDate).reversed())

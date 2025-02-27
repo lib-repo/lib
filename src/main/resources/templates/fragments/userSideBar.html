@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
-
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
   <style>
@@ -18,7 +17,6 @@
       align-items: center;
       justify-content: flex-start;
     }
-
     .user-sidebar-brand {
       background-color: #212529;
       color: white;
@@ -29,18 +27,15 @@
       margin-bottom: 20px;
       width: 100%;
     }
-
     .user-brand-link {
       text-align: center;
       display: block;
     }
-
     .user-sidebar-brand .user-info {
       display: flex;
       align-items: center;
       gap: 10px;
     }
-
     .user-nav-link {
       color: rgba(255, 255, 255, 0.56);
       font-size: 16px;
@@ -50,20 +45,20 @@
       display: flex;
       align-items: center;
     }
-
     .user-nav-link:hover {
-
       color: #fff;
     }
-
+    .user-nav-link.active {
+      color: #fff;
+      background-color: #495057;
+      font-weight: bold;
+    }
     .user-nav-item {
       width: 100%;
     }
-
     .user-nav-treeview {
       padding-left: 20px;
     }
-
     .user-sidebar-menu {
       list-style-type: none;
       padding-left: 0;
@@ -71,7 +66,6 @@
       align-items: center;
       justify-content: center;
     }
-
     .user-sidebar-menu,
     .user-nav-treeview {
       list-style: none;
@@ -82,10 +76,9 @@
       list-style-type: none;
       padding-left: 0;
     }
-
   </style>
 </head>
-
+<body>
 <aside th:fragment="userSide" id="userSidebar" class="user-sidebar bg-body-secondary shadow" data-bs-theme="dark">
   <div class="user-sidebar-brand">
     <a th:onclick="|location.href='@{/}'|" class="user-brand-link">
@@ -95,29 +88,40 @@
       </div>
     </a>
   </div>
-
   <div>
     <nav>
       <ul class="nav user-sidebar-menu flex-column user-no-bullets" role="menu" data-accordion="false">
         <li class="user-nav-item menu-open">
           <ul class="nav user-nav-treeview no-bullets">
+            <!-- 상호대차 현황 -->
             <li class="user-nav-item">
-              <a href="./index.html" class="user-nav-link active">
+              <a th:onclick="|location.href='@{/api/rent/1}'|"
+                 class="user-nav-link"
+                 th:classappend="${currentPage == 'rent' ? ' active' : ''}">
                 <p>상호대차 현황</p>
               </a>
             </li>
+            <!-- 상호대차 이력 조회 -->
             <li class="user-nav-item">
-              <a href="./index2.html" class="user-nav-link">
+              <a th:onclick="|location.href='@{/api/rent/history/1}'|"
+                 class="user-nav-link"
+                 th:classappend="${currentPage == 'history' ? ' active' : ''}">
                 <p>상호대차 이력 조회</p>
               </a>
             </li>
+            <!-- 도서관 변경 -->
             <li class="user-nav-item" style="cursor: pointer;">
-              <a th:onclick="|location.href='@{/api/rent/admin/managements}'|" class="user-nav-link">
+              <a th:onclick="|location.href='@{/library/change}'|"
+                 class="user-nav-link"
+                 th:classappend="${currentPage == 'libraryChange' ? ' active' : ''}">
                 <p>도서관 변경</p>
               </a>
             </li>
+            <!-- 회원 탈퇴 -->
             <li class="user-nav-item" style="cursor: pointer;">
-              <a th:onclick="|location.href='@{}'|" class="user-nav-link">
+              <a th:onclick="|location.href='@{/user/withdraw}'|"
+                 class="user-nav-link"
+                 th:classappend="${currentPage == 'withdraw' ? ' active' : ''}">
                 <p>회원 탈퇴</p>
               </a>
             </li>
@@ -127,4 +131,5 @@
     </nav>
   </div>
 </aside>
+</body>
 </html>

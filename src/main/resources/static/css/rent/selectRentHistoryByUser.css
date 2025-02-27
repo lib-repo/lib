@@ -68,3 +68,21 @@
     margin: 5px 0;
     color: #555;
 }
+
+.history-book-cover {
+    width: 100px;
+    height: 150px;
+    background-color: #ddd;
+    border-radius: 5px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.history-book-cover-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
