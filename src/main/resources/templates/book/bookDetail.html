@@ -54,7 +54,7 @@
                 <td th:text="${lib.getLibrary().libraryPhone}"></td>
                 <td>
                     <a class="btn-flat rent-btn"
-                       th:attr="data-library-id=${lib.getLibrary().libraryId}"
+                       th:attr="data-library-id=${lib.getLibrary().libraryId}, data-availability-id = ${lib.getAvailabilityId()}"
                        onclick="requestLoan(this)">신청하기</a>
                 </td>
 

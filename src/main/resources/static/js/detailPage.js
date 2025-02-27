@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     window.requestLoan = function(button) {
         const libraryId = button.getAttribute("data-library-id");
-
+        const availabilityId = button.getAttribute("data-availability-id")
         if (!libraryId) {
             alert("도서관 정보가 없습니다. 다시 시도해주세요.");
             console.error("도서관 ID가 없습니다.");
@@ -20,10 +20,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
         console.log("전송되는 libraryId: ", libraryId);
         console.log("전송되는 bookId: ", bookId);
+        console.log("전송되는 availabilityId: ", availabilityId);
 
         axios.post(`/api/rent/${bookId}`, {
             userId: 1,
-            libraryId: libraryId
+            libraryId: libraryId,
+            availabilityId: availabilityId
         })
             .then(response => {
                 alert("대출 신청이 완료되었습니다!");

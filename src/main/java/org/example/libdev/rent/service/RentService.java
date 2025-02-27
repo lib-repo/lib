@@ -6,9 +6,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.libdev.availability.entity.Availability;
 import org.example.libdev.availability.repository.AvailabilityRepository;
+import org.example.libdev.availability.service.AvailabilityService;
 import org.example.libdev.book.entity.Book;
 import org.example.libdev.book.repository.BookRepository;
-import org.example.libdev.book.service.BookService;
 import org.example.libdev.rent.dto.ResponseAdminRentDto;
 import org.example.libdev.rent.dto.ResponseHistoryRentDto;
 import org.example.libdev.rent.dto.ResponseRentDto;
@@ -40,13 +40,13 @@ public class RentService {
     private final UserRepository userRepository;
     private final JavaMailSender javaMailSender;
     private final AvailabilityRepository availabilityRepository;
-    private final BookService bookService;
+    private final AvailabilityService availabilityService;
 
     /**
      * rent 생성
      */
     @Transactional
-    public void saveRent(Long userId, Long bookId, Long libraryId) {
+    public void saveRent(Long userId, Long bookId, Long libraryId, Long availabilityId) {
         Book book = bookRepository.findById(bookId).orElseThrow(
                 () -> new IllegalStateException("책을 찾을 수 없습니다.")
         );
@@ -55,12 +55,15 @@ public class RentService {
                 () -> new IllegalStateException("사용자를 찾을 수 없습니다.")
         );
 
-        List<Availability> availabilities = book.getBookAvailabilities();
+        Availability availability = availabilityService.getAvailability(availabilityId);
 
-        Availability availability = availabilities.stream()
-                .filter(a -> a.getLibrary().getLibraryId().equals(libraryId) && a.isAvailable())
-                .findFirst()
-                .orElseThrow(() -> new IllegalStateException("이 도서관에서는 현재 대출이 불가능합니다."));
+        if(!availability.isAvailable()){
+            throw new IllegalStateException("이미 대출되었습니다.");
+        }else{
+            availability.setAvailable(false);
+            availabilityRepository.save(availability);
+        }
+
 
         LocalDate rentDate = LocalDate.now();
         LocalDate returnDate = rentDate.plusWeeks(2);
@@ -76,9 +79,6 @@ public class RentService {
                 .build();
 
         rentRepository.save(rent);
-
-        availability.setAvailable(false);
-        availabilityRepository.save(availability);
     }
 
     /**
