@@ -109,11 +109,13 @@ public class RentService {
      *  대여 내역 조회
      */
     @Transactional(readOnly = true)
-    public List<ResponseHistoryRentDto> historyRentByUser(Long userId){
+    public List<ResponseHistoryRentDto> historyRentByUser(Long userIdx){
 
-        List<Rent> historyRents = rentRepository.findByUser_UserIdxAndStatus(userId,RentStatus.RETURNED).orElseThrow(
+        List<Rent> historyRents = rentRepository.findByUser_UserIdxAndStatus(userIdx,RentStatus.RETURNED).orElseThrow(
                 () -> new IllegalStateException("대여 내역을 찾을 수 없습니다.")
         );
+
+        log.info("history:{}",historyRents.toString());
 
         return historyRents.stream()
                 .sorted(Comparator.comparing(Rent::getRentDate).reversed())
