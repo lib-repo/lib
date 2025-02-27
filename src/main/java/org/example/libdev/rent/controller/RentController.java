@@ -40,6 +40,7 @@ public class RentController {
             model.addAttribute("message", "대여 내역이 없습니다.");
         }
 
+        model.addAttribute("currentPage", "rent");
         model.addAttribute("rents", rents);
         model.addAttribute("userId", userId);
 
@@ -55,6 +56,7 @@ public class RentController {
             model.addAttribute("error", "대여 내역이 없습니다.");
         }
 
+        model.addAttribute("currentPage", "history");
         model.addAttribute("historyRentList", historyRentList);
         model.addAttribute("userId", userId);
 
