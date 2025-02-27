@@ -1,27 +1,17 @@
-ALTER TABLE subject MODIFY created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
+--ALTER TABLE subject MODIFY created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
 
 
 -- 도서 주제 삽입
-INSERT INTO Subject (subject_id, name)
-VALUES (1, '총류');
-INSERT INTO Subject (subject_id, name)
-VALUES (2, '철학');
-INSERT INTO Subject (subject_id, name)
-VALUES (3, '종교');
-INSERT INTO Subject (subject_id, name)
-VALUES (4, '사회과학');
-INSERT INTO Subject (subject_id, name)
-VALUES (5, '자연과학');
-INSERT INTO Subject (subject_id, name)
-VALUES (6, '기술과학');
-INSERT INTO Subject (subject_id, name)
-VALUES (7, '예술');
-INSERT INTO Subject (subject_id, name)
-VALUES (8, '언어');
-INSERT INTO Subject (subject_id, name)
-VALUES (9, '문학');
-INSERT INTO Subject (subject_id, name)
-VALUES (10, '역사');
+INSERT INTO `subject` (name) VALUES ('총류');
+INSERT INTO `subject` (name) VALUES ( '철학');
+INSERT INTO `subject` (name) VALUES ('종교');
+INSERT INTO `subject` (name) VALUES ('사회과학');
+INSERT INTO `subject` (name) VALUES ('자연과학');
+INSERT INTO `subject` (name) VALUES ('기술과학');
+INSERT INTO `subject` (name) VALUES ('예술');
+INSERT INTO `subject` (name) VALUES ( '언어');
+INSERT INTO `subject` (name) VALUES ( '문학');
+INSERT INTO `subject` (name) VALUES ( '역사');
 
 INSERT INTO libraries (library_code, library_name, library_location, library_phone)
 VALUES ('711618', 'KB국민은행과 함께하는 나무 작은도서관', '서울특별시 노원구 동일로 1405', '070-4158-9660'),
