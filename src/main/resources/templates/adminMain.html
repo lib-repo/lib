@@ -30,9 +30,9 @@
           <img src="/icon/Book.png" class="various-icons">
           <h2>등록 관리</h2>
         </div>
-        <div class="box" onclick="location.href='order_management.html'">
+        <div class="box" th:onclick="|location.href='@{/api/rent/admin/managements}'|">
           <img src="/icon/rent.png" class="various-icons">
-          <h2>대출 관리</h2>
+          <h2>대여 관리</h2>
         </div>
         <div class="box" th:onclick="|location.href='@{/api/subject/all}'|">
           <img src="/icon/Book%20open.png" class="various-icons">
