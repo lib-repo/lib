@@ -102,17 +102,17 @@
         <li class="user-nav-item menu-open">
           <ul class="nav user-nav-treeview no-bullets">
             <li class="user-nav-item">
-              <a href="./index.html" class="user-nav-link active">
+              <a th:onclick="|location.href='@{/api/rent/1}'|"  class="user-nav-link active">
                 <p>상호대차 현황</p>
               </a>
             </li>
             <li class="user-nav-item">
-              <a href="./index2.html" class="user-nav-link">
+              <a th:onclick="|location.href='@{/api/rent/history/1}'|" class="user-nav-link">
                 <p>상호대차 이력 조회</p>
               </a>
             </li>
             <li class="user-nav-item" style="cursor: pointer;">
-              <a th:onclick="|location.href='@{/api/rent/admin/managements}'|" class="user-nav-link">
+              <a th:onclick="|location.href='@{}'|" class="user-nav-link">
                 <p>도서관 변경</p>
               </a>
             </li>
