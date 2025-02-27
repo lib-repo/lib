@@ -45,7 +45,7 @@ public class RentService {
     /**
      * rent 생성
      */
-    @Transactional
+    @Transactional(timeout = 5)
     public void saveRent(Long userId, Long bookId, Long libraryId, Long availabilityId) {
         Book book = bookRepository.findById(bookId).orElseThrow(
                 () -> new IllegalStateException("책을 찾을 수 없습니다.")
@@ -55,14 +55,15 @@ public class RentService {
                 () -> new IllegalStateException("사용자를 찾을 수 없습니다.")
         );
 
-        Availability availability = availabilityService.getAvailability(availabilityId);
+        Availability availability = availabilityRepository.findById(availabilityId)
+                .orElseThrow(() -> new IllegalStateException("대출 가능 정보를 찾을 수 없습니다."));
 
         if(!availability.isAvailable()){
             throw new IllegalStateException("이미 대출되었습니다.");
-        }else{
-            availability.setAvailable(false);
-            availabilityRepository.save(availability);
         }
+
+        availability.setAvailable(false);
+        availabilityRepository.save(availability);
 
 
         LocalDate rentDate = LocalDate.now();
