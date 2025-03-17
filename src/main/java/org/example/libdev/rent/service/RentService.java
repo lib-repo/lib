@@ -9,6 +9,9 @@ import org.example.libdev.availability.repository.AvailabilityRepository;
 import org.example.libdev.availability.service.AvailabilityService;
 import org.example.libdev.book.entity.Book;
 import org.example.libdev.book.repository.BookRepository;
+import org.example.libdev.global.exception.BusinessException;
+import org.example.libdev.global.exception.ErrorCode;
+import org.example.libdev.global.exception.NotFoundException;
 import org.example.libdev.rent.dto.ResponseAdminRentDto;
 import org.example.libdev.rent.dto.ResponseHistoryRentDto;
 import org.example.libdev.rent.dto.ResponseRentDto;
@@ -40,26 +43,27 @@ public class RentService {
     private final UserRepository userRepository;
     private final JavaMailSender javaMailSender;
     private final AvailabilityRepository availabilityRepository;
-    private final AvailabilityService availabilityService;
 
     /**
      * rent 생성
      */
+
     @Transactional(timeout = 5)
     public void saveRent(Long userId, Long bookId, Long libraryId, Long availabilityId) {
         Book book = bookRepository.findById(bookId).orElseThrow(
-                () -> new IllegalStateException("책을 찾을 수 없습니다.")
+                () -> new NotFoundException.BookNotFoundException("Book")
         );
 
         User user = userRepository.findById(userId).orElseThrow(
-                () -> new IllegalStateException("사용자를 찾을 수 없습니다.")
+                () -> new NotFoundException.UserNotFoundException("User")
         );
 
         Availability availability = availabilityRepository.findById(availabilityId)
-                .orElseThrow(() -> new IllegalStateException("대출 가능 정보를 찾을 수 없습니다."));
+                .orElseThrow(() -> new NotFoundException.AvailabilityNotFoundException("Availability")
+                );
 
         if(!availability.isAvailable()){
-            throw new IllegalStateException("이미 대출되었습니다.");
+            throw new BusinessException("이미 대출되었습니다.", ErrorCode.RENT_ALREADY_RENTED);
         }
 
         availability.setAvailable(false);
@@ -91,11 +95,12 @@ public class RentService {
 
         if (status.isEmpty() || status.equalsIgnoreCase("ALL")) {
             rentsByUser = rentRepository.findByUser_UserIdxAndStatusNot(userId, RentStatus.RETURNED)
-                    .orElseThrow(()-> new IllegalStateException("사용자의 대여 내역을 찾을 수 없습니다."));
+                    .orElseThrow(()-> new NotFoundException.RentNotFoundException("Rent")
+                    );
         } else {
             RentStatus rentStatus = RentStatus.valueOf(status.toUpperCase());
             rentsByUser = rentRepository.findByUser_UserIdxAndStatus(userId, rentStatus).orElseThrow(
-                    () -> new IllegalStateException("사용자의 대여 내역을 찾을 수 없습니다.")
+                    () -> new NotFoundException.RentNotFoundException("Rent")
             );
         }
 
@@ -113,10 +118,8 @@ public class RentService {
     public List<ResponseHistoryRentDto> historyRentByUser(Long userIdx){
 
         List<Rent> historyRents = rentRepository.findByUser_UserIdxAndStatus(userIdx,RentStatus.RETURNED).orElseThrow(
-                () -> new IllegalStateException("대여 내역을 찾을 수 없습니다.")
+                () -> new NotFoundException.RentNotFoundException("Rent")
         );
-
-        log.info("history:{}",historyRents.toString());
 
         return historyRents.stream()
                 .sorted(Comparator.comparing(Rent::getRentDate).reversed())
@@ -131,15 +134,15 @@ public class RentService {
     public void renewRent(Long rentId){
 
         Rent renewRent = rentRepository.findById(rentId).orElseThrow(
-                () -> new IllegalStateException("대출 내역을 찾을 수 없습니다.")
+                () -> new NotFoundException.RentNotFoundException("Rent")
         );
 
         if(!renewRent.getStatus().equals(RentStatus.RENTED)){
-            throw new IllegalStateException("대출 상태에만 연장할 수 있습니다.");
+            throw new BusinessException("대출 상태에만 연장할 수 있습니다.", ErrorCode.RENT_STATUS_INVALID);
         }
 
         if(renewRent.getRenew()>=1){
-            throw new IllegalStateException("연장 횟수를 초과했습니다.");
+            throw new BusinessException("연장 횟수를 초과했습니다.", ErrorCode.RENT_RENEW_EXCEEDED);
         }
 
         LocalDate currentReturnDate = LocalDate.parse(renewRent.getReturnDate(),
@@ -168,7 +171,7 @@ public class RentService {
     @Transactional
     public void returnRent(Long rentId) {
         Rent returnRent = rentRepository.findById(rentId).orElseThrow(
-                () -> new IllegalArgumentException("Rent 내역을 찾을 수 없습니다.")
+                () -> new NotFoundException.RentNotFoundException("Rent")
         );
 
         Book returnedBook = returnRent.getBook();
@@ -177,7 +180,7 @@ public class RentService {
         Availability targetAvailability = returnedBook.getBookAvailabilities().stream()
                 .filter(av -> av.getLibrary().getLibraryId().equals(rentedLibraryId))
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("해당 도서관의 Availability 정보를 찾을 수 없습니다."));
+                .orElseThrow(() -> new NotFoundException.AvailabilityNotFoundException("Availability"));
 
         targetAvailability.setAvailable(true);
 //        targetAvailability.setUpdateDate();
