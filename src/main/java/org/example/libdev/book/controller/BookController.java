@@ -1,18 +1,18 @@
 package org.example.libdev.book.controller;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.example.libdev.library.entity.Library;
 import org.example.libdev.availability.entity.Availability;
 import org.example.libdev.book.dto.BookResponseDTO;
 import org.example.libdev.book.service.BookService;
+import org.example.libdev.library.service.LibraryService;
 import org.example.libdev.subject.repository.SubjectRepository;
 import org.example.libdev.subject.service.SubjectService;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,10 +20,12 @@ import java.util.List;
 @Controller
 @RequestMapping("/books")
 @RequiredArgsConstructor
+@Slf4j
 public class BookController {
 
     private final BookService bookService;
     private final SubjectService subjectService;
+    private final LibraryService libraryService;
 
     @GetMapping
     public String getAllBooks(@RequestParam(defaultValue = "0") int page,
@@ -44,10 +46,18 @@ public class BookController {
     }
 
     @GetMapping("/{bookId}")
-    public String bookDetail(@PathVariable("bookId") Long bookId, Model model) {
+    public String bookDetail(@PathVariable("bookId") Long bookId,
+                             @RequestParam(value = "selectedLibraryId", required = false) Long selectedLibraryId,
+                             Model model) {
         try {
+            List<Availability> availabilities = bookService.checkAvailability(bookId);
+            List<Library> partnerLibraries = (selectedLibraryId != null)
+                    ? libraryService.findPartnerLibraries(selectedLibraryId)
+                    : new ArrayList<>();
 
-            List<Availability> availabilities =  bookService.checkAvailability(bookId);
+            for(Library library : partnerLibraries) {
+                System.out.println("asdf" + library.getLibraryName());
+            }
 
             List<Availability> availableLibraries = new ArrayList<>();
             for (Availability availability : availabilities) {
@@ -56,9 +66,11 @@ public class BookController {
                 }
             }
 
+            model.addAttribute("partnerLibraries", partnerLibraries);
             model.addAttribute("libs", availableLibraries);
             model.addAttribute("book", bookService.getBookById(bookId));
             model.addAttribute("subjects", subjectService.findAll());
+            model.addAttribute("selectedLibraryId", selectedLibraryId);
 
             return "book/bookDetail";
         } catch (Exception e) {
@@ -66,6 +78,7 @@ public class BookController {
             return "error";
         }
     }
+
 
     @GetMapping("/subject/{subjectId}")
     public String getBookBySubject(@PathVariable("subjectId") Long subjectId, Model model) {

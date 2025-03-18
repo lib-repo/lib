@@ -6,7 +6,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.example.libdev.library.dto.LibraryRequestDTO;
 import org.example.libdev.library.dto.LibraryResponseDTO;
 import org.example.libdev.library.entity.Library;
+import org.example.libdev.library.entity.LibraryAgreement;
 import org.example.libdev.library.entity.RegionCode;
+import org.example.libdev.library.repository.LibraryAgreementRepository;
 import org.example.libdev.library.repository.LibraryRepository;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -31,6 +33,7 @@ public class LibraryService {
     private final RestTemplate restTemplate;
 
     private final LibraryRepository libraryRepository;
+    private final LibraryAgreementRepository libraryAgreementRepository;
 
 //    @PostConstruct
 //    public void init() {
@@ -91,6 +94,10 @@ public class LibraryService {
         Library library = libraryRepository.findById(libraryId).orElseThrow();
 
         return library.toResponseDTO();
+    }
+
+    public List<Library> findPartnerLibraries(Long libraryId) {
+        return libraryAgreementRepository.findPartnerLibrariesByLibraryId(libraryId);
     }
 
     // open api로 도서관 데이터 조회

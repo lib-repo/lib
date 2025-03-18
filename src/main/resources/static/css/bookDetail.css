@@ -55,3 +55,13 @@ table {
     width: 100%;
     table-layout: fixed;
 }
+
+.detail-select{
+    appearance: none !important;
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    background-color: white !important;
+    border: 1px solid #ddd !important;
+    padding: 0.5em !important;
+    width: 100% !important;
+}

@@ -39,6 +39,9 @@ public class Library extends BaseEntity {
     @OneToMany(mappedBy = "library", fetch = FetchType.LAZY)
     private List<Availability> bookAvailabilities;
 
+    @OneToMany(mappedBy = "toLibrary", fetch = FetchType.LAZY)
+    private List<LibraryAgreement> agreements;
+
     public LibraryResponseDTO toResponseDTO() {
         return LibraryResponseDTO.builder()
                 .libraryId(libraryId)

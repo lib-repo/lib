@@ -8,10 +8,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <link rel="stylesheet" href="/css/table.css">
     <link rel="stylesheet" href="/css/bookDetail.css">
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script defer src="/js/detailPage.js"></script>
 </head>
-<body th:attr=" data-book-id=${book?.bookId}">
+<body th:attr="data-book-id=${book?.bookId}">
 
 <div th:replace="~{fragments/userHeader}"></div>
 <div th:replace="~{fragments/categorybar (subjects=${subjects})}"></div>
@@ -36,8 +34,20 @@
 
     <div class="divider"></div>
 
+    <form id="libraryForm" method="get" th:action="@{/books/{bookId}(bookId=${book?.bookId})}">
+<!--        <label for="librarySelect">도서관 선택:</label>-->
+        <select id="librarySelect" name="selectedLibraryId" class="detail-select" onchange="this.form.submit()">
+            <option value="">도서관을 선택하세요</option>
+            <option th:each="lib : ${libs}"
+                    th:value="${lib.library.getLibraryId()}"
+                    th:text="${lib.library.libraryName}"
+                    th:selected="${selectedLibraryId != null and selectedLibraryId == lib.library.getLibraryId()}">
+            </option>
+        </select>
+    </form>
+
     <div>
-        <h5 class="justify-start">상호대차 가능 도서관</h5>
+        <h5 class="justify-start">협약된 상호대차 도서관</h5>
         <table class="highlight">
             <thead>
             <tr>
@@ -48,16 +58,15 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="lib : ${libs}">
-                <td th:text="${lib.getLibrary().libraryName}"></td>
-                <td th:text="${lib.getLibrary().libraryLocation}"></td>
-                <td th:text="${lib.getLibrary().libraryPhone}"></td>
+            <tr th:each="lib : ${partnerLibraries}">
+                <td th:text="${lib.getLibraryName()}"></td>
+                <td th:text="${lib.getLibraryLocation()}"></td>
+                <td th:text="${lib.getLibraryPhone()}"></td>
                 <td>
                     <a class="btn-flat rent-btn"
-                       th:attr="data-library-id=${lib.getLibrary().libraryId}, data-availability-id = ${lib.getAvailabilityId()}"
+                       th:attr="data-library-id=${lib.getLibraryId()}"
                        onclick="requestLoan(this)">신청하기</a>
                 </td>
-
             </tr>
             </tbody>
         </table>
@@ -65,5 +74,12 @@
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var elems = document.querySelectorAll('select');
+        M.FormSelect.init(elems);
+    });
+</script>
 </body>
 </html>
+

@@ -7,15 +7,21 @@ import org.example.libdev.library.service.LibraryService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import org.example.libdev.library.entity.Library;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/admin/libraries")
 @RequiredArgsConstructor
-public class LibraryController {
+public class LibraryApiController {
 
     private final LibraryService libraryService;
+
+    @GetMapping("/{libraryId}/partners")
+    public ResponseEntity<List<Library>> getPartnerLibraries(@PathVariable Long libraryId) {
+        List<Library> partnerLibraries = libraryService.findPartnerLibraries(libraryId);
+        return ResponseEntity.ok(partnerLibraries);
+    }
 
     @GetMapping
     public ResponseEntity<List<LibraryResponseDTO>> getAllLibraries() {
