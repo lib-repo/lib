@@ -15,4 +15,8 @@ public interface AvailabilityRepository extends JpaRepository<Availability, Long
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     Optional<Availability> findById(Long availabilityId);
+
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    Optional<Availability> findAvailabilitiesByLibrary_LibraryId(Long libraryId);
+    boolean existsByBook_BookIdAndLibrary_LibraryIdAndAvailableTrue(Long bookId, Long libraryId);
 }

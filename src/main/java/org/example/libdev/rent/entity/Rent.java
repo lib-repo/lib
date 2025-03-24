@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.example.libdev.book.entity.Book;
+import org.example.libdev.library.entity.Library;
 import org.example.libdev.user.entity.User;
 
 import java.time.LocalDate;
@@ -20,14 +21,11 @@ import java.time.format.DateTimeFormatter;
 public class Rent {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long rentId;
 
     @Enumerated(EnumType.STRING)
     private RentStatus status;
-
-    @Column(nullable = false)
-    private Long libraryId;
 
     @Column(nullable = false)
     private String rentDate;
@@ -45,6 +43,10 @@ public class Rent {
     @ManyToOne
     @JoinColumn(name = "user_idx", nullable = false)
     private User user;
+
+    @ManyToOne
+    @JoinColumn(name = "library_id", nullable = false)
+    private Library library;
 
     public void updateRenew(int renew, LocalDate returnDate) {
         this.renew = renew;

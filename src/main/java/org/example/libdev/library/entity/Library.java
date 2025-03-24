@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import org.example.libdev.availability.entity.Availability;
 import org.example.libdev.global.entity.BaseEntity;
 import org.example.libdev.library.dto.LibraryResponseDTO;
+import org.example.libdev.rent.entity.Rent;
 
 import java.util.List;
 
@@ -41,6 +42,9 @@ public class Library extends BaseEntity {
 
     @OneToMany(mappedBy = "toLibrary", fetch = FetchType.LAZY)
     private List<LibraryAgreement> agreements;
+
+    @OneToMany(mappedBy = "library", fetch = FetchType.LAZY)
+    private List<Rent> rents;
 
     public LibraryResponseDTO toResponseDTO() {
         return LibraryResponseDTO.builder()

@@ -8,6 +8,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <link rel="stylesheet" href="/css/table.css">
     <link rel="stylesheet" href="/css/bookDetail.css">
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="https://cdn.iamport.kr/v1/iamport.js"></script>
 </head>
 <body th:attr="data-book-id=${book?.bookId}">
 
@@ -35,7 +37,6 @@
     <div class="divider"></div>
 
     <form id="libraryForm" method="get" th:action="@{/books/{bookId}(bookId=${book?.bookId})}">
-<!--        <label for="librarySelect">도서관 선택:</label>-->
         <select id="librarySelect" name="selectedLibraryId" class="detail-select" onchange="this.form.submit()">
             <option value="">도서관을 선택하세요</option>
             <option th:each="lib : ${libs}"
@@ -47,7 +48,7 @@
     </form>
 
     <div>
-        <h5 class="justify-start">협약된 상호대차 도서관</h5>
+        <h5 class="justify-start">상호대차 가능 도서관</h5>
         <table class="highlight">
             <thead>
             <tr>
@@ -79,6 +80,115 @@
         var elems = document.querySelectorAll('select');
         M.FormSelect.init(elems);
     });
+</script>
+
+<script>
+    function requestLoan(element) {
+        var libraryId = element.getAttribute("data-library-id");
+        var bookId = document.body.getAttribute("data-book-id");
+        var selectedLibraryId = document.getElementById("librarySelect").value;
+        var bookName = document.querySelector("h4").innerText;
+        var availabilityId = element.getAttribute("data-availability-id");
+        var userId = 1;
+        const IMP = window.IMP;
+        console.log(IMP);
+        if (!IMP) {
+            alert("아임포트 라이브러리를 불러오지 못했습니다.");
+            return;
+        }
+        IMP.init("imp51475373");
+        console.log("IMP initialized",IMP);
+
+        let merchant_uid = "order_" + new Date().getTime();
+
+        fetch("/payment/prepare", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                merchant_uid: merchant_uid,
+                amount: 5000,
+                bookId: bookId,
+                bookName: bookName,
+                userId: userId,
+                toLibraryId: libraryId,
+                selectedLibraryId: selectedLibraryId
+            })
+        })
+            .then(res => {
+                if (!res.ok) {
+                    throw new Error("결제 준비 요청 실패");
+                }
+                return res.json();
+            })
+            .then(() => {
+
+                IMP.request_pay({
+                    pg: "kakaopay.TC0ONETIME",
+                    pay_method: "card",
+                    merchantUid: merchant_uid,
+                    name: "상호대차 도서 신청",
+                    amount: 5000,
+                    buyer_email: "test@example.com",
+                    buyer_name: "홍길동",
+                    buyer_tel: "010-1234-5678",
+                    buyer_addr: "서울특별시 강남구",
+                    buyer_postcode: "12345"
+                }, function (rsp) {
+                    if (rsp.success) {
+
+                        fetch("/payment/validation", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+                            body: JSON.stringify({
+                                imp_uid: rsp.imp_uid,
+                                merchantUid: merchant_uid
+                            })
+                        })
+                            .then(response => response.json())
+
+                            .then(data => {
+
+                                if (data.status === "paid") {
+                                    alert("결제가 성공적으로 완료되었습니다.");
+
+
+                                    fetch(`/api/rent/${bookId}`, {
+                                        method: "POST",
+                                        headers: {
+                                            "Content-Type": "application/json"
+                                        },
+                                        body: JSON.stringify({
+                                            libraryId: libraryId,
+                                            userId: userId
+                                        })
+                                    }).then(res => {
+                                        if (res.ok) {
+                                            alert("대출 신청 완료!");
+                                        } else {
+                                            res.text().then(msg => alert("대출 신청 실패: " + msg));
+                                        }
+                                    }).catch(err => alert("대출 신청 중 오류 발생"));
+                                }
+                                else {
+                                    alert("결제 검증 실패");
+                                }
+                            })
+                            .catch(err => alert("서버 검증 중 오류 발생"));
+                    } else {
+                        alert("결제 실패: " + rsp.error_msg);
+                    }
+                });
+            })
+            .catch(err => {
+                alert("결제 준비 중 오류 발생: " + err.message);
+            });
+    }
+
+
 </script>
 </body>
 </html>

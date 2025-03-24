@@ -12,5 +12,4 @@ import lombok.Setter;
 public class RequestRentDto {
     private Long userId;
     private Long libraryId;
-    private Long availabilityId;
 }

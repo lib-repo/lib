@@ -7,7 +7,6 @@ import org.example.libdev.availability.entity.Availability;
 import org.example.libdev.book.dto.BookResponseDTO;
 import org.example.libdev.book.service.BookService;
 import org.example.libdev.library.service.LibraryService;
-import org.example.libdev.subject.repository.SubjectRepository;
 import org.example.libdev.subject.service.SubjectService;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -55,9 +54,6 @@ public class BookController {
                     ? libraryService.findPartnerLibraries(selectedLibraryId)
                     : new ArrayList<>();
 
-            for(Library library : partnerLibraries) {
-                System.out.println("asdf" + library.getLibraryName());
-            }
 
             List<Availability> availableLibraries = new ArrayList<>();
             for (Availability availability : availabilities) {

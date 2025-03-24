@@ -34,6 +34,18 @@ public class NotFoundException extends BusinessException {
             super(resourceName, ErrorCode.AVAILABILITY_NOT_FOUND);
         }
     }
+
+    public static class LibraryNotFoundException extends NotFoundException {
+        public LibraryNotFoundException(String resourceName) {
+            super(resourceName, ErrorCode.AVAILABILITY_NOT_FOUND);
+        }
+    }
+
+    public static class LibraryAgreementNotFoundException extends NotFoundException {
+        public LibraryAgreementNotFoundException(String resourceName) {
+            super(resourceName, ErrorCode.NOT_FOUND);
+        }
+    }
 }
 
 

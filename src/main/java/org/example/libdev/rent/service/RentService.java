@@ -12,6 +12,8 @@ import org.example.libdev.book.repository.BookRepository;
 import org.example.libdev.global.exception.BusinessException;
 import org.example.libdev.global.exception.ErrorCode;
 import org.example.libdev.global.exception.NotFoundException;
+import org.example.libdev.library.entity.Library;
+import org.example.libdev.library.repository.LibraryRepository;
 import org.example.libdev.rent.dto.ResponseAdminRentDto;
 import org.example.libdev.rent.dto.ResponseHistoryRentDto;
 import org.example.libdev.rent.dto.ResponseRentDto;
@@ -42,6 +44,7 @@ public class RentService {
     private final BookRepository bookRepository;
     private final UserRepository userRepository;
     private final JavaMailSender javaMailSender;
+    private final LibraryRepository libraryRepository;
     private final AvailabilityRepository availabilityRepository;
 
     /**
@@ -49,7 +52,7 @@ public class RentService {
      */
 
     @Transactional(timeout = 5)
-    public void saveRent(Long userId, Long bookId, Long libraryId, Long availabilityId) {
+    public void saveRent(Long userId, Long bookId, Long libraryId) {
         Book book = bookRepository.findById(bookId).orElseThrow(
                 () -> new NotFoundException.BookNotFoundException("Book")
         );
@@ -58,9 +61,13 @@ public class RentService {
                 () -> new NotFoundException.UserNotFoundException("User")
         );
 
-        Availability availability = availabilityRepository.findById(availabilityId)
+        Availability availability = availabilityRepository.findAvailabilitiesByLibrary_LibraryId(libraryId)
                 .orElseThrow(() -> new NotFoundException.AvailabilityNotFoundException("Availability")
                 );
+
+        Library library = libraryRepository.findById(libraryId).orElseThrow(
+                () -> new NotFoundException.LibraryNotFoundException("Library")
+        );
 
         if(!availability.isAvailable()){
             throw new BusinessException("이미 대출되었습니다.", ErrorCode.RENT_ALREADY_RENTED);
@@ -77,7 +84,7 @@ public class RentService {
                 .rentDate(rentDate.toString())
                 .status(RentStatus.RENTED)
                 .returnDate(returnDate.toString())
-                .libraryId(libraryId)
+                .library(library)
                 .book(book)
                 .user(user)
                 .renew(0)
@@ -175,7 +182,7 @@ public class RentService {
         );
 
         Book returnedBook = returnRent.getBook();
-        Long rentedLibraryId = returnRent.getLibraryId();
+        Long rentedLibraryId = returnRent.getLibrary().getLibraryId();
 
         Availability targetAvailability = returnedBook.getBookAvailabilities().stream()
                 .filter(av -> av.getLibrary().getLibraryId().equals(rentedLibraryId))
