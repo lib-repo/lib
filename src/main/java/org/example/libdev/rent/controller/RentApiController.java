@@ -2,6 +2,7 @@ package org.example.libdev.rent.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.example.libdev.global.mail.service.AsyncSendService;
 import org.example.libdev.rent.dto.RequestRentDto;
 import org.example.libdev.rent.service.RentService;
 import org.springframework.http.HttpStatus;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 public class RentApiController {
     private final RentService rentService;
+    private final AsyncSendService asyncSendService;
 
     /**
      * rent 생성
@@ -61,7 +63,7 @@ public class RentApiController {
     @PostMapping("/{rentId}/arrival")
     public ResponseEntity<String> arrivalEmail(@PathVariable Long rentId){
         try{
-            rentService.sendArrivalNotification(rentId);
+            asyncSendService.sendArrivalNotification(rentId);
             return ResponseEntity.ok().build();
         }catch (IllegalArgumentException e){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
